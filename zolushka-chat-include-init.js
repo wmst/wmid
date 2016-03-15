@@ -1,5 +1,5 @@
 (function($){
-	var name=$("#myUN").val();
+	var name=$.cookie('AccountNumber');
 	MessHandle=function(obj,sender,CB)
 	{
 		switch(obj.type)

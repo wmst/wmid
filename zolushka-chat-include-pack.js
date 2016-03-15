@@ -2,7 +2,7 @@
 	$("#Chat_OnlineStatus").parent().after("<tr><td style=\"text-align:center;padding:7px 0 7px;font-size:1.2em\"><span id=\"infotext\">Рассылка остановлена</span><br /><code id=\"infohelp\" title=\"Отправлено <- ожидает\">0 &lt;- 0</code></td></tr>");
 
 	var runned=false,
-		name=$("#myUN").val(),
+		name=$.cookie('AccountNumber'),
 		myid=$("#myAN").val(),
 		info=$("#infohelp"),
 		tinfo=$("#infotext"),
