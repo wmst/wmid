@@ -9,3 +9,4 @@ var lang = {
 		'g_':'',
 		}
 };
+lang = lang[(window.navigator.language!='ru'&&window.navigator.language!='en'?'en':window.navigator.language)];
