@@ -269,6 +269,7 @@
 			case "init":
 				CB({
 					name:name,
+					lang:lang,
 					limit:limit,
 					attach:attach,
 					runned:runned,

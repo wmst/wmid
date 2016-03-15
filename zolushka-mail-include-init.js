@@ -6,6 +6,7 @@
 			case "init":
 				CB({
 					name:name,
+					lang:lang,
 					runned:false,
 					storage:{}
 				});
