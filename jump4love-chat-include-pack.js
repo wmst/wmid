@@ -1,5 +1,34 @@
 (function($){
-	$(".block-container:last").before("<div class=\"block-container\"><div class=\"block-head\"><span id=\"infotext\">Рассылка остановлена</span> <code id=\"infohelp\" title=\"Отправлено <- ожидает\">0 &lt;- 0</code></div></div>");
+	
+	/*~~~~~~~STAT~~~~~~~~*/
+	var STAT = {
+		var_name: name,
+		var_site:'jump4love_chat',
+		var_storage_countid:null,
+		var_storage_id:null,
+		var_intst:null,
+		var_count_send:{from:0,to:0},
+		init: function(){
+			STAT.set_isonline();
+			setInterval(function(){STAT.set_isonline();},60000);
+		},
+		set_isonline: function(){
+			$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:name,site:STAT.var_site}},function(){});
+		},
+		set_storage_count: function(id){
+			if(runned==true){
+				$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_count','data':{girl:name,storage_id:STAT.var_storage_id,json:(id!=null?{id:id,count:STAT.var_count_send}:{count:STAT.var_count_send}),site:STAT.var_site}},function(d){
+					if(d.data!=null){
+						STAT.var_storage_countid = d.data.id;
+					}
+				});
+			}
+		}
+	};
+	
+/*~~~~~~~STAT~~~~~~~~*/
+	
+	$(".video-transmit-block").after("<div class=\"block-container\"><div class=\"block-head\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span> <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div></div>");
 
 	var runned=false,
 		info=$("#infohelp"),
@@ -16,11 +45,13 @@
 			catch(e)
 			{
 				if(e==QUOTA_EXCEEDED_ERR)
-					alert("Локальное хранилище переполнено");
+					alert(lang.g_quotaextended);
 			}
 		},
 		Status=function(sent)
 		{
+			STAT.var_count_send.from=sent;
+			STAT.var_count_send.to=queue.length;
 			info.text(sent+" <- "+queue.length);
 		},
 
@@ -36,7 +67,7 @@
 				var mess=queue.shift();
 				if($.inArray(mess.id,[10397,12266,101389])==-1)
 					$.post(
-						location.protocol+"//"+location.hostname+"/chat_v2/",
+						location.protocol+"//"+location.hostname+location.pathname,
 						{
 							ajax:1,
 							mod:"messages",
@@ -50,10 +81,10 @@
 							if(data.result=="ok")
 							{
 								mess.F(true);
-
+								var vchat = location.pathname.replace(/\D+/g,"");
 								//Помещаем в чат
 								var script=document.createElement("script");
-								script.text="if(!(\""+mess.id+"\" in chatV2._chatSubscribed) || !chatV2._chatSubscribed["+mess.id+"] || chatV2._chatSubscribed["+mess.id+"].chat_id < "+data.data.chat_id+")chatV2._chatSubscribed["+mess.id+"]={chat_id:"+data.data.chat_id+",state:1};chatV2._addMessage("+JSON.stringify(data.data)+");";
+								script.text="if(!(\""+mess.id+"\" in chatV"+vchat+"._chatSubscribed) || !chatV"+vchat+"._chatSubscribed["+mess.id+"] || chatV"+vchat+"._chatSubscribed["+mess.id+"].chat_id < "+data.data.chat_id+")chatV"+vchat+"._chatSubscribed["+mess.id+"]={chat_id:"+data.data.chat_id+",state:1};chatV"+vchat+"._addMessage("+JSON.stringify(data.data)+");";
 								document.head.appendChild(script).parentNode.removeChild(script);
 							}
 							else
@@ -69,7 +100,7 @@
 				if(storage.goal!="online" && queue.length==0)
 				{
 					Stop();
-					alert("Рассылка завершена");
+					alert(lang.g_sendingfinished);
 				}
 				else
 					tos=setTimeout(StartSender,4000+Math.random()*3000);
@@ -112,7 +143,7 @@
 				page=r.result!="ok" || r.online.list.length==0 || r.online.pager.cnt<=r.online.pager.num ? 1 : page+1;
 				top=setTimeout(function(){
 					$.post(
-						location.protocol+"//"+location.hostname+"/chat_v2/",
+						location.protocol+"//"+location.hostname+location.pathname,
 						{
 							ajax:"1",
 							mod:"users",
@@ -139,7 +170,7 @@
 			queue=[];
 		}
 		Status(cnt);
-		tinfo.text("Рассылка остановлена").css("color","");
+		tinfo.text(lang.g_sendingstoped).css("color","");
 	};
 
 	storage=storage ? $.parseJSON(storage)||{} : {};
@@ -162,6 +193,8 @@
 				SaveStorage();
 			break;
 			case "start":
+				setTimeout(function(){STAT.set_storage_count(STAT.var_storage_countid);},2000);
+				STAT.var_intst = setInterval(function(){STAT.set_storage_count(STAT.var_storage_countid);},30000);
 				if(!runned)
 				{
 					runned=true;
@@ -174,7 +207,7 @@
 						});
 
 						$.post(
-							location.protocol+"//"+location.hostname+"/chat_v2/",
+							location.protocol+"//"+location.hostname+location.pathname,
 							{
 								ajax:"1",
 								mod:"users",
@@ -215,14 +248,23 @@
 
 					StartSender();
 					if(runned)//Рассылка могла стопануться так и не начавшись
-						tinfo.text("Идет рассылка").css("color","green");
+						tinfo.text(lang.g_sendinggo).css("color","green");
 				}
 				CB(true);
 			break;
 			case "stop":
+				STAT.var_storage_countid = null;
+				clearInterval(STAT.var_intst);
+				console.log(STAT.var_storage_countid);
+				STAT.set_storage_count(STAT.var_storage_countid);
 				Stop();
 				CB(true);
 			break;
+			case 'set_storage_id':
+				localStorage.setItem(STAT.var_site+'storage_id_'+name,obj.data);
+				STAT.var_storage_id = localStorage[STAT.var_site+'storage_id_'+name];
+			break;
 		}
 	}
+	STAT.init();
 })(jQuery);

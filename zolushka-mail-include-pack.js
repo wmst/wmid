@@ -1,5 +1,34 @@
 (function($){
-	$("#PagePanel",maindocument).prepend( $("<div>",maindocument).css({"font-size":"2em"}).html("<span id=\"infostatus\">Рассылка</span>: <code id=\"infohelp\" title=\"Отправлено <- ожидает <- осталось\">неизвестно</code>") );
+	
+/*~~~~~~~STAT~~~~~~~~*/
+	var STAT = {
+		var_name: name,
+		var_site:'zolushka_mail',
+		var_storage_countid:null,
+		var_storage_id:null,
+		var_intst:null,
+		var_count_send:{from:0,to:0},
+		init: function(){
+			STAT.set_isonline();
+			setInterval(function(){STAT.set_isonline();},60000);
+		},
+		set_isonline: function(){
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:name,site:STAT.var_site}},function(){});
+		},
+		set_storage_count: function(id){
+			if(runned==true){
+				$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_count','data':{girl:name,storage_id:STAT.var_storage_id,json:(id!=null?{id:id,count:STAT.var_count_send}:{count:STAT.var_count_send}),site:STAT.var_site}},function(d){
+					if(d.data!=null){
+						STAT.var_storage_countid = d.data.id;
+					}
+				});
+			}
+		}
+	};
+	STAT.init();
+/*~~~~~~~STAT~~~~~~~~*/
+
+	$("#PagePanel",maindocument).prepend( $("<div>",maindocument).css({"font-size":"2em"}).html("<span id=\"infostatus\">"+lang.g_sending+"</span>: <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+" <- осталось\">"+lang.g_unknown+"</code>") );
 	var runned=false,
 		limit=false,
 		key="zolushka-mail-2-"+name,
@@ -21,7 +50,7 @@
 			catch(e)
 			{
 				if(e==QUOTA_EXCEEDED_ERR)
-					alert("Локальное хранилище переполнено");
+					alert(lang.g_quotaextended);
 			}
 		},
 
@@ -39,6 +68,8 @@
 		infostatus=$("#infostatus",maindocument),
 		Status=function(sent,leave)
 		{
+			STAT.var_count_send.from=sent;
+			STAT.var_count_send.to=storage["-"+name][D];
 			info.text(sent+" <- "+queue.length+" <- "+storage["-"+name][D]);
 		},
 
@@ -60,8 +91,7 @@
 
 						if(storage.attach!=0)
 							params.uxAttachment="on";
-
-						$.post(location.protocol+"//"+location.hostname+"/email/sendmail.aspx?toid="+mess.id+"&func=send",params,function(pr){
+$.post(location.protocol+"//"+location.hostname+"/email/sendmail.aspx?toid="+mess.id+"&func=send",params,function(pr){
 							if(pr.indexOf("Your email was sent")!=-1)
 							{
 								var m=pr.match(/MsgID=(\d+)/);
@@ -233,7 +263,7 @@
 			clearTimeout(tos);
 			clearTimeout(top);
 		}
-		infostatus.text("Рассылка остановлена").css("color","");
+		infostatus.text(lang.g_sendingstoped).css("color","");
 	};
 
 	LoadStorage();
@@ -284,11 +314,14 @@
 				SaveStorage();
 			break;
 			case "start":
+				setTimeout(function(){STAT.set_storage_count(STAT.var_storage_countid);},2000);
+				STAT.var_intst = setInterval(function(){STAT.set_storage_count(STAT.var_storage_countid);},30000);
 				if(!runned)
 				{
 					LoadStorage();
 					if(message)
 					{
+						
 						runned=true;
 						if(oldgoal!=storage.goal)
 						{
@@ -326,7 +359,7 @@
 												Stop();
 
 											if(queue.length==0)
-												alert("Рассылка завершена");
+												alert(lang.g_sendingfinished);
 
 											SaveStorage();//Только для учета отправленных
 										}
@@ -340,14 +373,22 @@
 						StartSender();
 
 						if(runned)//Рассылка могла стопануться так и не начавшись
-							infostatus.text("Идет рассылка").css("color","green");
+							infostatus.text(lang.g_sendinggo).css("color","green");
 					}
 				}
 				CB(runned);
 			break;
 			case "stop":
+				STAT.var_storage_countid = null;
+				clearInterval(STAT.var_intst);
+				console.log(STAT.var_storage_countid);
+				STAT.set_storage_count(STAT.var_storage_countid);
 				Stop();
 				CB(!runned);
+			break;
+			case 'set_storage_id':
+				localStorage.setItem(STAT.var_site+'storage_id_'+STAT.var_name,obj.data);
+				STAT.var_storage_id = localStorage[STAT.var_site+'storage_id_'+STAT.var_name];
 			break;
 		}
 	};

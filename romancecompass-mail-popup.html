@@ -1,88 +1,562 @@
 <div class="home">
 	<div class="header">
-		<h1 class="logo"><a href="http://wmid.com.ua">WMID.com.ua Bot программы для брачных агенств для золушки, дрима, свадьбы, джампа</a></h1>
+		<h1 class="logo"><a href="http://wmidbot.com" lng="g_logo">WMID.com.ua Bot программы для брачных агенств для золушки, дрима, свадьбы, джампа</a></h1>
 		<div class="clear10"></div>
 	</div>
 	<div class="content">
 		<div class="leftColumn">
 			<ul class="navi">
-				<li><a href="http://wmidbot.com/?page=help" target="_blank">Справка</a></li>
-				<li><a href="http://wmidbot.com/?page=dayactive" target="_blank">Продлить активацию</a></li>
-				<li><a href="#" id="blacklist">Черный список</a></li>
-				<li><a href="#" id="writerslist">Писатели</a></li>
+				<li><a href="http://wmidbot.com/pages/#conte" target="_blank" lng="g_help">Справка</a></li>
+				<li><a href="http://wmidbot.com/" target="_blank" lng="g_bayact">Продлить активацию</a></li>
+				<li><a href="#" id="blacklist" lng="g_balcklist">Черный список</a></li>
+				<li><a href="#" id="writerslist" lng="g_pisallist">Список писателей</a></li>
 			</ul>
 			<div class="clear10"></div>
 			<div class="active">
-				Переменные:<br />
-				<b>{Name}</b> имя<br />
-				<b>{Age}</b> возраст
+				<span lng="g_infotags">Переменные:</span><br />
+				<b>{Name}</b> <span lng="g_tagname">имя</span><br />
+				<b>{Age}</b> <span lng="g_tagage">возраст</span>
 			</div>
 			<div class="clear10"></div>
 			<div class="active">
-				Оплачено до:<br /><b id="payed"></b>
+				<span lng="g_pay_to">Оплачено до:</span><br /><b id="payed"></b>
 			</div>
 			<div class="clear10"></div>
 		</div>
 		<div class="rightColumn" id="mainside">
-			<b class="title">Тема</b> <a href="#" id="addt">Добавить</a> <a href="#" id="editt">Править</a> <a href="#" id="delt">Удалить</a>
+			<b class="title" lng="g_tema">Тема</b> <a href="#" id="addt" lng="g_add">Добавить</a> <a href="#" id="editt" lng="g_edit">Править</a> <a href="#" id="delt" lng="g_delete">Удалить</a>
 			<div class="clear5"></div>
 			<select class="sel_100" id="subject">
-				<option value="0">-нет тем-</option>
+				<option value="0" lng="g_notema">-нет тем-</option>
 			</select>
 			<div class="clear10"></div>
-			<textarea class="text_ms" id="text" placeholder="Введите текст письма"></textarea>
+			<textarea class="text_ms" id="text" placeholder="Add message"></textarea>
 			<div class="clear10"></div>
-			<b class="title">Цель</b>
+			<b class="title" lng="g_sendfor">Отсылать по</b>
 			<div class="clear5"></div>
 			<select class="sel_100" id="goal">
-				<option value="search">Поиск</option>
-				<option value="writers">По писателям</option>
-				<option value="favorites">По фаворитам</option>
+				<option value="search" lng="g_for_search">Поиск</option>
+				<option value="writers" lng="g_for_writers">По писателям</option>
+				<option value="favorites" lng="g_for_favorites">По фаворитам</option>
 			</select>
 			<div class="clear10"></div>
-			<b class="title">Фотка</b>
+			<b class="title" lng="g_photos">Фотка</b>
 			<input type="file" id="file" />
 			<div class="clear10"></div>
 			<table style="width:75%" class="table_1">
 				<tr>
 					<td>
-						<b class="title">Взраст от</b>
+						<b class="title" lng="g_age_from">Взраст от</b>
 						<div class="clear5"></div>
 						<input type="number" id="age-from" value="20" min="20" max="100" style="width:50px" />
 					</td>
 					<td class="center"><b>&mdash;</b></td>
 					<td>
-						<b class="title">до</b>
+						<b class="title" lng="g_to">до</b>
 						<div class="clear5"></div>
 						<input type="number" id="age-to" value="60" min="20" max="100" style="width:50px" />
 					</td>
 				</tr>
 			</table>
 			<div class="clear10"></div>
-			<a href="#" class="Btn_big" id="start"><b>Начать рассылку</b></a>
-			<a href="#" class="Btn_big_red" id="stop" style="display:none;"><b>Остановить рассылку</b></a>
+			<a href="#" class="Btn_big" id="start"><b lng="g_start_send">Начать рассылку</b></a>
+			<a href="#" class="Btn_big_red" id="stop" style="display:none;"><b lng="g_stop_send">Остановить рассылку</b></a>
 			<div class="clear5"></div>
 			<img src="" alt="" id="preview">
 		</div>
 		<div class="rightColumn" style="display:none" id="blackside">
 			<div class="clear10"></div>
-			<b class="title">Черный список</b>
+			<b class="title" lng="g_balcklist">Черный список</b>
 			<div class="clear5"></div>
 			<select id="black" size="15" style="width:100%" multiple></select>
 			<div class="clear10"></div>
-			<a href="#" id="addb" class="Btn_normal" title="Добавить"><b>+</b></a> <a href="#" id="editb" class="Btn_normal"><b>Править</b></a> <a href="#" id="delb" class="Btn_normal" style="background:#e14747;"><b>Удалить</b></a>
+			<a href="#" id="addb" class="Btn_normal" title="Add"><b>+</b></a> <a href="#" id="editb" class="Btn_normal"><b lng="g_edit">Править</b></a> <a href="#" id="delb" class="Btn_normal" style="background:#e14747;"><b lng="g_delete">Удалить</b></a>
 		</div>
 		<div class="rightColumn" style="display:none" id="writersside">
 			<div class="clear10"></div>
-			<b class="title">Список писателей</b>
+			<b class="title" lng="g_pisallist">Список писателей</b>
 			<div class="clear5"></div>
 			<select id="writers" size="15" style="width:100%" multiple></select>
 			<div class="clear10"></div>
-			<a href="#" id="addw" class="Btn_normal" title="Добавить"><b>+</b></a> <a href="#" id="editw" class="Btn_normal"><b>Править</b></a> <a href="#" id="delw" class="Btn_normal" style="background:#e14747;"><b>Удалить</b></a>
+			<a href="#" id="addw" class="Btn_normal" title="Add"><b>+</b></a> <a href="#" id="editw" class="Btn_normal"><b lng="g_edit">Править</b></a> <a href="#" id="delw" class="Btn_normal" style="background:#e14747;"><b lng="g_delete">Удалить</b></a>
 		</div>
 		<div class="clear"></div>
 	</div>
 </div>
 <script type="text/javascript">//<![CDATA[
-eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('j 7=$("24").21("7"),2=7.2,c=$("#c"),l=$("#Q-1e"),i=$("#Q-1i"),9=$("#9"),6=$("#6"),x=$("#x"),I=$("#I"),L=$("#L"),15=$("#15"),8=$("#8"),P=$("#P"),H=$("#H"),E=$("#E"),12=$("#12"),X=3(){j a=$("#9 o:1V");4(9.11("o").A()>1){9.s("M",y);a.6("-темы-")}f{9.s("M",J);a.6("-нет тем-")}},1h=3(){4(2.w N 2)$.1K(2[2.w],{6:6.5(),l:l.5(),i:i.5()})},1g=3(){L.C();I.S();$("#6,#Q-1e,#Q-1i,#x,#9,#1f,#14,#12").s("M",J)},1z=3(){I.C();L.S();$("#6,#Q-1e,#Q-1i,#x,#1f,#14,#12").s("M",y);X()},d=3(){18({1c:"1d",2:2,V:7.V,q:7.q,U:7.U,T:7.T})},1j=3(a){18({1c:"1U",1p:a})};$("#1I").6(1H.1G(0,16)).s("W","Осталось: "+1X);$("#1f").h(3(){4(H.1u(":1s")){H.1a(E).S();P.C()}f{P.1a(E).S();H.C()}u!1});$("#14").h(3(){4(E.1u(":1s")){H.1a(E).S();P.C()}f{P.1a(H).S();E.C()}u!1});$("#1J").h(3(){j n=R("Введите 1q (можно несколько, через запятую)");4(n!==19){$.p(n.G(/\\D+/),3(k,v){4(c.11("[1b="+v+"]").A()==0){$("<o>").6(v).B(c);c.5(v);2.c[v]=""}});d()}u!1});$("#1W").h(3(){j t=$("#c :F"),6=[];4(t.A()>0){t.p(3(){6.1D($(m).5())});6=R("Отредактируйте запись:",6.1r(", "));4(6!==19){t.p(3(){Y 2.c[$(m).5()]}).O();$.p(6.G(/\\D+/),3(k,v){4(c.11("[1b="+v+"]").A()==0){$("<o>").6(v).B(c);c.5(v);2.c[v]=""}});d()}}u!1});$("#1M").h(3(){j t=$("#c :F");t.p(3(){Y 2.c[$(m).5()]}).O();d();u!1});$("#1N").h(3(){j n=R("Введите 1q (можно несколько, через запятую)");4(n!==19){$.p(n.G(/\\D+/),3(k,v){1O.1Q(v);4(8.11("[1b="+v+"]").A()==0){$("<o>").6(v).B(8);8.5(v);2.8[v]=""}});d()}u!1});$("#1S").h(3(){j t=$("#8 :F"),6=[];4(t.A()>0){t.p(3(){6.1D($(m).5())});6=R("Отредактируйте запись:",6.1r(", "));4(6!==19){t.p(3(){Y 2.8[$(m).5()]}).O();$.p(6.G(/\\D+/),3(k,v){4(8.11("[1b="+v+"]").A()==0){$("<o>").6(v).B(8);8.5(v);2.8[v]=""}});d()}}u!1});$("#1T").h(3(){j t=$("#8 :F");t.p(3(){Y 2.8[$(m).5()]}).O();d();u!1});$.p(2,3(k,v){4(k==Z(k))$("<o>").5(k).6(v.W).B(9)});j 17=y;4(2.x)x.5(2.x);f 17=J;4(2.c)$.p(2.c,3(k,v){$("<o>").6(v?v:k).5(k).B(c)});f 2.c={};4(2.8)$.p(2.8,3(k,v){$("<o>").6(v?v:k).5(k).B(8)});f 2.8={};l.z(3(){2.l=Z($(m).5());4(2.l>=Z(i.5()))i.5(2.l);d()});i.z(3(){2.i=Z($(m).5());4(2.i<=Z(l.5()))l.5(2.i);d()});x.z(3(){2.x=$(m).5();d()});6.z(3(){4(2.w N 2){2[2.w].6=$(m).5();d()}});12.z(3(e){e.1Z();j b=m.27[0],q=y,1k=1o 1t(),1l=1o 1t();7.U=$(m).5().G(/(\\\\|\\/)/g).1L();1k.1v=3(a){q=a.1w.1x;1l.1P(b)};1l.1v=3(a){7.V=a.1w.1x;7.T=q.G(";")[0].G(":")[1];7.q=q;15.C().s("1y",q);d()};1k.1R(b)});4(7.q)15.C().s("1y",7.q);9.z(3(){j v=$(m).5(),1d=2.w!=v,1m=$("#1A,#1B,#1C,#I");4(1d)1h();4(v=="0"){1m.s("M",J);6.5(6.s("1n"));l.5(l.s("1n"));i.5(i.s("1n"));1j(0)}f 4(!(v N 2))$("o:F",m).O();f{l.5(2[v].l);i.5(2[v].i);6.5(2[v].6);1j(2[v].1E);1m.s("M",y)}4(1d){2.w=v;d()}});4(2.w)9.5(2.w);f 17=J;9.z();4(17){}$("#1Y").h(3(){j n=R("Введите тему письма");4(n){$("<o>").5(2.13).6(n).B(9);2[2.13]={W:n,6:6.5(),l:l.5(),i:i.5(),1p:",",1E:0,20:0};X();4(7.K)2.13++;f 9.5(2.13++).z();d()}u y});$("#1C").h(3(){1h();d()});$("#1B").h(3(){4(!7.K){j v=9.5(),t=$("#9 o:F"),n;4(v>0){n=R("Введите новую тему письма",t.6());4(n&&v N 2){t.6(n);2[v].W=n;d()}}}u y});$("#1A").h(3(){4(!7.K){j v=9.5(),t=$("#9 o:F");4(v>0&&(!(v N 2)||22("Вы действительно хотите удалить письмо \\""+t.6()+"\\"?"))){j a=t.1F().A()>0?t.1F():t.23();t.O();Y 2[v];9.5(a.5()).z();X()}}u y});4(7.K)1g();I.h(3(){4(!(2.w N 2))10("Выберите тему для рассылки");f 4(7.25)10("На сегодня лимит рассылки исчерпан. Приходите завтра.");f 4(2[2.w].6=="")10("Введите текст письма!");f 4(2[2.w].W=="")10("Введите тему письма!");f 4(2.x=="8"&&$.26(2.8)){10("Заполните писателей");$("#14").h()}f 18({1c:"I",V:7.V,q:7.q,U:7.U,T:7.T},3(r){4(r){7.K=J;1g()}})});L.h(3(){18({1c:"L"},3(r){4(r){7.K=y;1z()}})});X();',62,132,'||storage|function|if|val|text|init|writers|subject|||black|SaveStorage||else||click|at|var||af|this||option|each|file_url||prop||return||active|goal|false|change|size|appendTo|show||writersside|selected|split|blackside|start|true|runned|stop|disabled|in|remove|mainside|age|prompt|hide|file_mime|file_name|file_bin|title|EnableSubject|delete|parseInt|alert|find|file|last|writerslist|preview||resave|SM|null|add|value|type|save|from|blacklist|Start|SaveTemplate|to|Status|rurl|rbin|controls|defaultValue|new|sent|ID|join|visible|FileReader|is|onload|target|result|src|Stop|delt|editt|savet|push|cnt|next|substr|rdate|payed|addb|extend|pop|delb|addw|console|readAsBinaryString|log|readAsDataURL|editw|delw|status|first|editb|remain|addt|preventDefault|offlinepage|data|confirm|prev|body|limit|isEmptyObject|files'.split('|'),0,{}))
+var WLANG = {
+	init_html:function(){
+		$.each(lang,function(i,v){
+			$('[lng="'+i+'"').text(v);
+		});
+	}
+};
+WLANG.init_html();
+
+var STAT = {
+	var_name: udata.name,
+	var_site:'romancecompass_mail',
+	var_storage_id: function(){
+		return localStorage[STAT.var_site+'storage_id_'+STAT.var_name];
+	},
+	init: function(){
+		STAT.events();
+		STAT.get_storage_srv();
+	},
+	events: function(){
+		$('#payed').text(udata.date);
+	},
+	get_storage_srv: function(){
+		if(STAT.var_storage_id()){
+			SM({type:"set_storage_id",data:STAT.var_storage_id()});
+		}else{
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'get_storage_invites','data':{girl:STAT.var_name,site:STAT.var_site}},function(d){
+				if(d.data!=null){
+					localStorage.setItem(STAT.var_site+'storage_id_'+d.data.girl_id, d.data.id);
+					storage = JSON.parse(d.data.settings);
+					SaveStorage();
+					SM({type:"set_storage_id",data:STAT.var_storage_id()});
+					STAT.set_settings_controls();
+				}
+			});
+		}
+	},
+	set_storage_srv: function(obj){
+		if(obj){
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_invites','data':{girl:STAT.var_name,json:obj,site:STAT.var_site}},function(d){
+				if(d.data!=null){
+					localStorage.setItem(STAT.var_site+'storage_id_'+STAT.var_name, d.data);
+					SaveStorage();
+					SM({type:"set_storage_id",data:STAT.var_storage_id()});
+				}
+			});
+		}
+	},
+	set_settings_controls: function(call){
+			//Заполнение инфы из хранилища
+			console.log(storage);
+			$.each(storage, function (k, v) {
+				if (k == parseInt(k)) $("<option>")
+					.val(k)
+					.text(v.title)
+					.appendTo(subject)
+			});
+			var resave = false;
+			if (storage.goal) goal.val(storage.goal);
+			else resave = true;
+			if (storage.black) $.each(storage.black, function (k, v) {
+				$("<option>")
+					.text(v ? v : k)
+					.val(k)
+					.appendTo(black)
+			});
+			else storage.black = {};
+			if (storage.writers) $.each(storage.writers, function (k, v) {
+				$("<option>")
+					.text(v ? v : k)
+					.val(k)
+					.appendTo(writers)
+			});
+			else storage.writers = {};
+			af.change(function () {
+				storage.af = parseInt($(this)
+					.val());
+				if (storage.af >= parseInt(at.val())) at.val(storage.af);
+				SaveStorage()
+			});
+			at.change(function () {
+				storage.at = parseInt($(this)
+					.val());
+				if (storage.at <= parseInt(af.val())) af.val(storage.at);
+				SaveStorage()
+			});
+			goal.change(function () {
+				storage.goal = $(this)
+					.val();
+				SaveStorage()
+			});
+			text.change(function () {
+				if (storage.active in storage) {
+					storage[storage.active].text = $(this)
+						.val();
+					SaveStorage()
+				}
+			});
+			file.change(function (e) {
+				e.preventDefault();
+				var b = this.files[0]
+					, file_url = false
+					, rurl = new FileReader()
+					, rbin = new FileReader();
+				init.file_name = $(this)
+					.val()
+					.split(/(\\|\/)/g)
+					.pop();
+				rurl.onload = function (a) {
+					file_url = a.target.result;
+					rbin.readAsBinaryString(b)
+				};
+				rbin.onload = function (a) {
+					init.file_bin = a.target.result;
+					init.file_mime = file_url.split(";")[0].split(":")[1];
+					init.file_url = file_url;
+					preview.show()
+						.prop("src", file_url);
+					SaveStorage()
+				};
+				rurl.readAsDataURL(b)
+			});
+			if (init.file_url) preview.show()
+				.prop("src", init.file_url);
+			subject.change(function () {
+				var v = $(this)
+					.val()
+					, save = storage.active != v
+					, controls = $("#delt,#editt,#savet,#start");
+				if (save) SaveTemplate();
+				if (v == "0") {
+					controls.prop("disabled", true);
+					text.val(text.prop("defaultValue"));
+					af.val(af.prop("defaultValue"));
+					at.val(at.prop("defaultValue"));
+					Status(0)
+				} else if (!(v in storage)) $("option:selected", this)
+					.remove();
+				else {
+					af.val(storage[v].af);
+					at.val(storage[v].at);
+					text.val(storage[v].text);
+					Status(storage[v].cnt);
+					controls.prop("disabled", false)
+				}
+				if (save) {
+					storage.active = v;
+					SaveStorage()
+				}
+			});
+			if (storage.active) subject.val(storage.active);
+			else resave = true;
+			subject.change();
+			if (resave) {}
+		if(call){
+			return call();
+		}
+	}
+}
+
+var init = $("body")
+    .data("init")
+    , storage = init.storage
+    , black = $("#black")
+    , af = $("#age-from")
+    , at = $("#age-to")
+    , subject = $("#subject")
+    , text = $("#text")
+    , goal = $("#goal")
+    , start = $("#start")
+    , stop = $("#stop")
+    , preview = $("#preview")
+    , writers = $("#writers")
+    , mainside = $("#mainside")
+    , blackside = $("#blackside")
+    , writersside = $("#writersside")
+    , file = $("#file")
+    , EnableSubject = function () {
+		STAT.init();
+        var a = $("#subject option:first");
+        if (subject.find("option")
+            .size() > 1) {
+            subject.prop("disabled", false);
+            a.text(lang.g_temas)
+        } else {
+            subject.prop("disabled", true);
+            a.text(lang.g_notema)
+        }
+    }
+    , SaveTemplate = function () {
+        if (storage.active in storage) $.extend(storage[storage.active], {
+            text: text.val()
+            , af: af.val()
+            , at: at.val()
+        })
+    }
+    , Start = function () {
+		STAT.set_storage_srv(storage);
+        stop.show();
+        start.hide();
+        $("#text,#age-from,#age-to,#goal,#subject,#blacklist,#writerslist,#file")
+            .prop("disabled", true)
+    }
+    , Stop = function () {
+        start.show();
+        stop.hide();
+        $("#text,#age-from,#age-to,#goal,#blacklist,#writerslist,#file")
+            .prop("disabled", false);
+        EnableSubject()
+    }
+    , SaveStorage = function () {
+        SM({
+            type: "save"
+            , storage: storage
+            , file_bin: init.file_bin
+            , file_url: init.file_url
+            , file_name: init.file_name
+            , file_mime: init.file_mime
+        })
+    }
+    , Status = function (a) {
+        SM({
+            type: "status"
+            , sent: a
+        })
+    };
+$("#blacklist")
+    .click(function () {
+        if (blackside.is(":visible")) {
+            blackside.add(writersside)
+                .hide();
+            mainside.show()
+        } else {
+            mainside.add(writersside)
+                .hide();
+            blackside.show()
+        }
+        return !1
+    });
+$("#writerslist")
+    .click(function () {
+        if (writersside.is(":visible")) {
+            blackside.add(writersside)
+                .hide();
+            mainside.show()
+        } else {
+            mainside.add(blackside)
+                .hide();
+            writersside.show()
+        }
+        return !1
+    });
+$("#addb")
+    .click(function () {
+        var n = prompt(lang.g_addidman);
+        if (n !== null) {
+            $.each(n.split(/\D+/), function (k, v) {
+                if (black.find("[value=" + v + "]")
+                    .size() == 0) {
+                    $("<option>")
+                        .text(v)
+                        .appendTo(black);
+                    black.val(v);
+                    storage.black[v] = ""
+                }
+            });
+            SaveStorage()
+        }
+        return !1
+    });
+$("#editb")
+    .click(function () {
+        var t = $("#black :selected")
+            , text = [];
+        if (t.size() > 0) {
+            t.each(function () {
+                text.push($(this)
+                    .val())
+            });
+            text = prompt(lang.g_editwrite, text.join(", "));
+            if (text !== null) {
+                t.each(function () {
+                        delete storage.black[$(this)
+                            .val()]
+                    })
+                    .remove();
+                $.each(text.split(/\D+/), function (k, v) {
+                    if (black.find("[value=" + v + "]")
+                        .size() == 0) {
+                        $("<option>")
+                            .text(v)
+                            .appendTo(black);
+                        black.val(v);
+                        storage.black[v] = ""
+                    }
+                });
+                SaveStorage()
+            }
+        }
+        return !1
+    });
+$("#delb")
+    .click(function () {
+        var t = $("#black :selected");
+        t.each(function () {
+                delete storage.black[$(this)
+                    .val()]
+            })
+            .remove();
+        SaveStorage();
+        return !1
+    });
+$("#addw")
+    .click(function () {
+        var n = prompt(lang.g_addidman);
+        if (n !== null) {
+            $.each(n.split(/\D+/), function (k, v) {
+                console.log(v);
+                if (writers.find("[value=" + v + "]")
+                    .size() == 0) {
+                    $("<option>")
+                        .text(v)
+                        .appendTo(writers);
+                    writers.val(v);
+                    storage.writers[v] = ""
+                }
+            });
+            SaveStorage()
+        }
+        return !1
+    });
+$("#editw")
+    .click(function () {
+        var t = $("#writers :selected")
+            , text = [];
+        if (t.size() > 0) {
+            t.each(function () {
+                text.push($(this)
+                    .val())
+            });
+            text = prompt(lang.g_editwrite, text.join(", "));
+            if (text !== null) {
+                t.each(function () {
+                        delete storage.writers[$(this)
+                            .val()]
+                    })
+                    .remove();
+                $.each(text.split(/\D+/), function (k, v) {
+                    if (writers.find("[value=" + v + "]")
+                        .size() == 0) {
+                        $("<option>")
+                            .text(v)
+                            .appendTo(writers);
+                        writers.val(v);
+                        storage.writers[v] = ""
+                    }
+                });
+                SaveStorage()
+            }
+        }
+        return !1
+    });
+$("#delw")
+    .click(function () {
+        var t = $("#writers :selected");
+        t.each(function () {
+                delete storage.writers[$(this)
+                    .val()]
+            })
+            .remove();
+        SaveStorage();
+        return !1
+    });
+STAT.set_settings_controls();
+
+
+$("#addt")
+    .click(function () {
+        var n = prompt(lang.g_addtema);
+        if (n) {
+            $("<option>")
+                .val(storage.last)
+                .text(n)
+                .appendTo(subject);
+            storage[storage.last] = {
+                title: n
+                , text: text.val()
+                , af: af.val()
+                , at: at.val()
+                , sent: ","
+                , cnt: 0
+                , offlinepage: 0
+            };
+            EnableSubject();
+            if (init.runned) storage.last++;
+            else subject.val(storage.last++)
+                .change();
+            SaveStorage()
+        }
+        return false
+    });
+$("#savet")
+    .click(function () {
+        SaveTemplate();
+        SaveStorage()
+    });
+$("#editt")
+    .click(function () {
+        if (!init.runned) {
+            var v = subject.val()
+                , t = $("#subject option:selected")
+                , n;
+            if (v > 0) {
+                n = prompt(lang.g_addnewtema, t.text());
+                if (n && v in storage) {
+                    t.text(n);
+                    storage[v].title = n;
+                    SaveStorage()
+                }
+            }
+        }
+        return false
+    });
+$("#delt")
+    .click(function () {
+        if (!init.runned) {
+            var v = subject.val()
+                , t = $("#subject option:selected");
+            if (v > 0 && (!(v in storage) || confirm(lang.g_realydelletter+" \"" + t.text() + "\"?"))) {
+                var a = t.next()
+                    .size() > 0 ? t.next() : t.prev();
+                t.remove();
+                delete storage[v];
+                subject.val(a.val())
+                    .change();
+                EnableSubject()
+            }
+        }
+        return false
+    });
+if (init.runned) Start();
+start.click(function () {
+    if (!(storage.active in storage)) alert(lang.g_selecttemaletter);
+    else if (init.limit) alert(lang.g_limitleterisfail);
+    else if (storage[storage.active].text == "") alert(lang.g_addtextletter);
+    else if (storage[storage.active].title == "") alert(lang.g_addtema+"!");
+    else if (storage.goal == "writers" && $.isEmptyObject(storage.writers)) {
+        alert(lang.g_addpisalman);
+        $("#writerslist")
+            .click()
+    } else SM({
+        type: "start"
+        , file_bin: init.file_bin
+        , file_url: init.file_url
+        , file_name: init.file_name
+        , file_mime: init.file_mime
+    }, function (r) {
+        if (r) {
+            init.runned = true;
+            Start()
+        }
+    })
+});
+stop.click(function () {
+    SM({
+        type: "stop"
+    }, function (r) {
+        if (r) {
+            init.runned = false;
+            Stop()
+        }
+    })
+});
+EnableSubject();
+
 //]]></script>

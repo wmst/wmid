@@ -1,5 +1,33 @@
 (function($){
-	$("#Chat_OnlineStatus").parent().after("<tr><td style=\"text-align:center;padding:7px 0 7px;font-size:1.2em\"><span id=\"infotext\">Рассылка остановлена</span><br /><code id=\"infohelp\" title=\"Отправлено <- ожидает\">0 &lt;- 0</code></td></tr>");
+	/*~~~~~~~STAT~~~~~~~~*/
+	var STAT = {
+		var_name: name,
+		var_site:'zolushka_chat',
+		var_storage_countid:null,
+		var_storage_id:null,
+		var_intst:null,
+		var_count_send:{from:0,to:0},
+		init: function(){
+			STAT.set_isonline();
+			setInterval(function(){STAT.set_isonline();},60000);
+		},
+		set_isonline: function(){
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:name,site:STAT.var_site}},function(){});
+		},
+		set_storage_count: function(id){
+			if(runned==true){
+				$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_count','data':{girl:name,storage_id:STAT.var_storage_id,json:(id!=null?{id:id,count:STAT.var_count_send}:{count:STAT.var_count_send}),site:STAT.var_site}},function(d){
+					if(d.data!=null){
+						STAT.var_storage_countid = d.data.id;
+					}
+				});
+			}
+		}
+	};
+	
+/*~~~~~~~STAT~~~~~~~~*/
+
+	$("#Chat_OnlineStatus").parent().after("<tr><td style=\"text-align:center;padding:7px 0 7px;font-size:1.2em\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span><br /><code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></td></tr>");
 
 	var runned=false,
 		name=$.cookie('AccountNumber'),
@@ -18,11 +46,13 @@
 			catch(e)
 			{
 				if(e==QUOTA_EXCEEDED_ERR)
-					alert("Локальное хранилище переполнено");
+					alert(lang.g_quotaextended);
 			}
 		},
 		Status=function(sent)
 		{
+			STAT.var_count_send.from=sent;
+			STAT.var_count_send.to=queue.length;
 			info.text(sent+" <- "+queue.length);
 		},
 
@@ -43,7 +73,7 @@
 				if(storage.goal!="online" && queue.length==0)
 				{
 					Stop();
-					alert("Рассылка завершена");
+					alert(lang.g_sendingfinished);
 				}
 				else
 					tos=setTimeout(StartSender,2000);
@@ -112,13 +142,13 @@
 			queue=[];
 		}
 		Status(cnt);
-		tinfo.text("Рассылка остановлена").css("color","");
+		tinfo.text(lang.g_sendingfinished).css("color","");
 	};
 
 	storage=storage ? $.parseJSON(storage)||{} : {};
 	if(typeof storage.black=="undefined")
 		storage={black:{},goal:"online",af:30,at:100,text:""};
-
+	
 	MessHandle=function(obj,sender,CB)
 	{
 		switch(obj.type)
@@ -135,6 +165,8 @@
 				SaveStorage();
 			break;
 			case "start":
+				setTimeout(function(){STAT.set_storage_count(STAT.var_storage_countid);},2000);
+				STAT.var_intst = setInterval(function(){STAT.set_storage_count(STAT.var_storage_countid);},30000);
 				if(!runned)
 				{
 					runned=true;
@@ -188,11 +220,15 @@
 
 					StartSender();
 					if(runned)//Рассылка могла стопануться так и не начавшись
-						tinfo.text("Идет рассылка").css("color","green");
+						tinfo.text(lang.g_sendinggo).css("color","green");
 				}
 				CB(true);
 			break;
 			case "stop":
+				STAT.var_storage_countid = null;
+				clearInterval(STAT.var_intst);
+				console.log(STAT.var_storage_countid);
+				STAT.set_storage_count(STAT.var_storage_countid);
 				Stop();
 				CB(true);
 			break;
@@ -208,6 +244,10 @@
 				document.head.appendChild(script).parentNode.removeChild(script);
 				CB(true);
 			break;
+			case 'set_storage_id':
+				localStorage.setItem(STAT.var_site+'storage_id_'+name,obj.data);
+				STAT.var_storage_id = localStorage[STAT.var_site+'storage_id_'+name];
+			break;
 		}
 	}
 	function translb(sel){
@@ -220,4 +260,5 @@
 		});
 	}
 	translb('#Chat_ClientPanel_ShowMeSelect');
+	STAT.init();
 })(jQuery);

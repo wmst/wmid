@@ -1,3 +1,15 @@
+MessHandle=function(obj,sender,CB)
+{
+	switch(obj.type)
+	{
+		case "init":
+			CB({
+				name:name,
+				lang:lang,
+			});
+		break;
+	}
+};
 var STAT = {
 	var_storage_countid:null,
 	var_storage_id:null,
@@ -125,7 +137,7 @@ var STAT = {
 				if(t.unread==true&&t.closed==false){
 					var _el_li = $('#m_'+t.member.id);
 					if(SWMID.is_smile.indexOf(t.member.id)==-1){
-						$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="http://wmidbot.com/uploads/au.ogg" type="audio/ogg; codecs=vorbis"><source src="http://wmidbot.com/uploads/au.mp3" type="audio/mpeg"></audio>');
+						$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="https://raw.githubusercontent.com/iqschoolua/wmid/master/au_'+navl+'.ogg" type="audio/ogg; codecs=vorbis"><source src="https://raw.githubusercontent.com/iqschoolua/wmid/master/au_'+navl+'.mp3" type="audio/mpeg"></audio>');
 						if($(_el_li).size()>0){
 							SWMID.is_smile.push(t.member.id);
 							if($(_el_li).is('.active')==false){
@@ -158,7 +170,8 @@ var STAT = {
 					if(_el_li.length==0){
 						$.getJSON('http://www.svadba.com/chat/updates/member/'+t['client-id']+'/?member-with='+t['client-id'],function(r){ SWMID.set_mansList(r); });
 						if(arr_history_smile.join().search(t['client-id'])==-1){
-							$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="http://wmidbot.com/uploads/au.ogg" type="audio/ogg; codecs=vorbis"><source src="http://wmidbot.com/uploads/au.mp3" type="audio/mpeg"></audio>');
+							$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_platil','data':{girl:EWMID.var_user,client_id:t['client-id'],site:'svadba_chat'}},function(r){});
+							$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="https://raw.githubusercontent.com/iqschoolua/wmid/master/au_'+navl+'.ogg" type="audio/ogg; codecs=vorbis"><source src="https://raw.githubusercontent.com/iqschoolua/wmid/master/au_'+navl+'.mp3" type="audio/mpeg"></audio>');
 							setTimeout(function(){ 
 								arr_history_smile = $('#smiles').text();
 								arr_history_smile = (arr_history_smile?JSON.parse(arr_history_smile):[]);
@@ -176,7 +189,7 @@ var STAT = {
 				});
 				console.log('chat_act');
 			}else{
-				$('#chat_act ul').html('<div align="center" style="padding:10px;">Нет чатов</div>');
+				$('#chat_act ul').html('<div align="center" style="padding:10px;">'+lang.g_pusto+'</div>');
 			}
 			$('#smiles').text(JSON.stringify(new_list_smile));
 			$('#chat_act ul li').each(function(i,t){
@@ -192,7 +205,7 @@ var STAT = {
 			smiles = msg = null;
 		});
 		}else{
-			$('#chat_act ul').html('<div align="center" style="padding:10px;">Нет чатов</div>');	
+			$('#chat_act ul').html('<div align="center" style="padding:10px;">'+lang.g_pusto+'</div>');	
 		}
 	}
 };
@@ -240,7 +253,7 @@ var SWMID = {
 	build_interface: function(){
 		$('head').append('<style>#chat_act .message {height:11px!important;} #online-opponents { top:72px!important;} #snd_a_man { height:14px; position: absolute; left: 8px; top: 144px; z-index: 999; border: solid 1px #ccc; padding: 8px; background: #fff; width: 244px; overflow: hidden; bottom:auto; height:14px;} #snd_a_man a {font-family: tahoma; color: #5685d5;} #snd_a_man a:hove{ text-decoration: none;} #sending_list, #sending_list li { padding:0; margin:0; list-style: none;} #sending_list { border: solid 1px #ccc; overflow: auto; height:90%; } #sending_list li { padding: 2px 5px; border-bottom: solid 1px #ccc; color:#5685d5;cursor: pointer;} #sending_list li:hover,#sending_list li.act { background:#5685d5;color:#fff;}</style>');
 		$('#translate').after('<a href="javascript:void(0)" id="wmid_trans" style="width:112px; height: 27px; background: #26ade4; text-indent: 0; line-height: 28px; margin-right: 20px; font-weight: bold; color: #fff; border-radius: 10px; float:left;text-decoration: none;font-size: 14px;text-align: center;">WMID Translate</a>');
-		$('body').prepend('<div id="chat_act"><b>Активные чаты</b><ul><div align="center" style="padding:10px;">Нет чатов</div></ul></div><div id="count_send"></div><div id="snd_a_man"><a href="javascript:void(0)">Отчет приглашений</a><ul id="sending_list"></ul></div>');
+		$('body').prepend('<div id="chat_act"><b>'+lang.s_activechats+'</b><ul><div align="center" style="padding:10px;">'+lang.g_pusto+'</div></ul></div><div id="count_send"></div><div id="snd_a_man"><a href="javascript:void(0)">'+lang.s_report_send+'</a><ul id="sending_list"></ul></div>');
 	},
 	events: function(){
 		
@@ -411,11 +424,11 @@ var SWMID = {
 				if(SWMID.var_status=='start'){
 					STAT.var_count_send.from=SWMID.var_index_send+1;
 					STAT.var_count_send.to=limit_send;
-					$('#count_send').html('Отослано:'+(SWMID.var_index_send+1)+' из '+limit_send);
+					$('#count_send').html(lang.g_sendinggo+':'+(SWMID.var_index_send+1)+' -> '+limit_send);
 				}else if(SWMID.var_status=='pause'){
-					$('#count_send').html('Рассылка на паузе!');
+					$('#count_send').html(lang.g_sendingstoped);
 				}else if(SWMID.var_status=='stop'){
-					$('#count_send').html('Рассылка завершена!');
+					$('#count_send').html(lang.g_sendingfinished);
 				}
 				console.log(limit_send,send_member);
 				if(SWMID.var_index_send>=(limit_send-1)||send_member==null){
@@ -424,16 +437,16 @@ var SWMID = {
 						SWMID.var_time_auto = null;
 						SWMID.var_index_send=0;
 						console.log('stop');
-						$('#count_send').html('Рассылка завершена!');
+						$('#count_send').html(lang.g_sendingfinished);
 					}
 				}
 				console.log('send:',send_member['public-id'],'message:',message);
 			}else{
-				alert('Минимальный возраст не может превышать максимальный');
+				alert(lang.s_errorminmaxage);
 				SWMID.var_status = 'stop';
 			}
 		}else{
-			alert('Некому рассылать.');
+			alert('List is empty!');
 			SWMID.var_status = 'stop';
 		}
 	},
@@ -475,221 +488,10 @@ var SWMID = {
 			if(settings.url.indexOf('http://www.svadba.com/chat/send-message/')!=-1&&SWMID.var_status == 'start'){
 				SWMID.var_time_auto = setTimeout(function(){ SWMID.var_index_send++; SWMID.var_timeout = SWMID.send();},((60/SWMID.var_limit_stime)*1000));
 			}
-			/*if(settings.url.indexOf('http://www.svadba.com/chat/send-message/')!=-1){
-				if(settings.url.indexOf('?chat=true')==-1){
-					var id_man = settings.url.split('http://www.svadba.com/chat/send-message/').join('');
-					if(SWMID.arr_history_smile.join().search(id_man)){
-						SWMID.arr_history_smile.push(id_man);
-					}
-					id_man = null;
-				}
-			}*/
-			if(settings.url.indexOf('http://www.svadba.com/chat/updates/')!=-1){
-				var object = JSON.parse(xhr.responseText);
-				//console.log(object);
-				/*if(object!=null){
-				$.each(object,function(i,v){
-					if(v!=null){
-						switch(v.type){
-							case 'status':
-								SWMID.arr_active_chats = [];
-								if(v.updates[0].girl.chats.length>0){
-									$.each(v.updates[0].girl.chats,function(i,t){
-										var _el_li = $('#m_'+t['client-id']),
-											smiles = ['*Smiling-Face*','*Heart-Shaped-Eyes*','*Kissing-Face*'],
-											msg = smiles[Math.floor(Math.random()*smiles.length)];
-										SWMID.arr_active_chats.push(t['client-id']);
-										if(_el_li.length==0){
-											$.getJSON('http://www.svadba.com/chat/updates/member/'+t['client-id']+'/?member-with='+t['client-id'],function(r){ SWMID.set_mansList(r); });
-											if(SWMID.arr_history_smile.join().search(t['client-id'])==-1){
-												$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="http://wmidbot.com/uploads/au.ogg" type="audio/ogg; codecs=vorbis"><source src="http://wmidbot.com/uploads/au.mp3" type="audio/mpeg"></audio>');
-												setTimeout(function(){ 
-													if(SWMID.arr_history_smile.join().search(t['client-id'])==-1){
-														console.log("t['client-id']",t['client-id']);
-														$.post("http://www.svadba.com/chat/send-message/"+t['client-id'],{tag:t['client-id'],source:'lc',message:msg},function(s){ console.log('post auto smile'); });
-													}
-												},30000);
-											}
-										}
-										_el_li = null;
-									});
-									console.log('chat_act');
-								}else{
-									$('#chat_act ul').html('<div align="center" style="padding:10px;">Нет чатов</div>');
-								}
-								$('#chat_act ul li').each(function(i,t){
-									if(SWMID.arr_active_chats.join().search($(t).attr('rel'))==-1){
-										$(t).remove();
-									}
-								});
-								if(v.updates[0].girl.chats.length>3){
-									SWMID.var_status = 'pause';
-									SWMID.var_time_auto = null;
-									console.log('pause');
-								}
-								smiles = msg = null;
-							break;
-							case 'unreads':
-								$.each(v.updates,function(i,t){
-									if(t.unread==true&&t.closed==false){
-										var _el_li = $('#m_'+t.member.id);
-										if(SWMID.is_smile.indexOf(t.member.id)==-1){
-											$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="http://wmidbot.com/uploads/au.ogg" type="audio/ogg; codecs=vorbis"><source src="http://wmidbot.com/uploads/au.mp3" type="audio/mpeg"></audio>');
-											if($(_el_li).size()>0){
-												SWMID.is_smile.push(t.member.id);
-												if($(_el_li).is('.active')==false){
-													$(_el_li).addClass('blink');
-												}
-											}
-										}
-										_el_li = null;
-									}
-								});
-								console.log('unread_sms');
-							break;
-							case 'messages':
-								$.each(v.updates,function(i,d){
-									console.log('d.source',d.source);
-									if(d.source=='an'){
-										var _el_li = $('#m_'+d.member.id);
-										$(_el_li).addClass('blink');
-										$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="http://wmidbot.com/uploads/au.ogg" type="audio/ogg; codecs=vorbis"><source src="http://wmidbot.com/uploads/au.mp3" type="audio/mpeg"></audio>');
-									}
-								});
-								console.log('messages',v.updates);
-							break;
-						
-					}
-				});
-				}else{
-					$('#chat_act ul').html('<div align="center" style="padding:10px;">Нет чатов</div>');	
-				}}*/
-			}
 		});
 	}
 };
-/*~old~*/
-var status_obj;
-var status = 0;
-var n = 0;
-var interval;
-var mans_invite = [];
-var blist = [];
-var online = [];
-var stor = 1;
-function set_mans(req,c){
-			var public_name = req[0].updates[0].member.name,
-				public_id = req[0].updates[0].member['public-id'],
-				id = req[0].updates[0].member['id'],
-				status = /*(c['video-allowed']==true)?'video_chat':*/'chat';
-				active = (id==window.location.hash.split('#/').join(''))?'active':'';
-				if($('#chat_act ul li#m_'+id).size()==0){
-					$('#chat_act ul').append('<li class="cl '+active+'" onclick="window.location.href=\'http://www.svadba.com/chat/#/'+id+'\'" id="m_'+id+'" rel = "'+id+'"><span class="ics '+status+'"></span> '+public_name+' (ID:'+public_id+')</li>');
-				}
-				
-				$('.chat_act li').click(function(){
-					window.location.href="http://www.svadba.com/chat/#/"+$(this).attr('rel');
-				});
-				$('#chat_act ul li').click(function(){
-					$('#chat_act ul li').removeClass('active');
-					$(this).addClass('active');
-				});
-				
-		}
-		/*setInterval(function(){
-			var mans_chat = [];
-			var new_chat_act_time = [];
-			var girl = $('#user-info p:eq(1)').text();
-			$.getJSON('http://www.svadba.com/chat/updates/status/everyone/',function(s){
-				if(s!=null&&s[0].updates[0].girl.chats.length>0){
-					if(s[0].updates[0].girl.chats.length>=3){
-						clearInterval(interval);
-						status = 0;
-					}
-					$('#chat_act ul li').removeClass('active');
-					$('#chat_act ul li#m_'+window.location.hash.split('#/').join('')).addClass('active');
-					for(c=0;c<s[0].updates[0].girl.chats.length;c++){
-						var public_name = '',
-							public_id = '',
-							client_id = s[0].updates[0].girl.chats[c]['client-id'],
-							smiles = ['*Smiling-Face*','*Winking-Face*','*Heart-Shaped-Eyes*'],
-							msg = smiles[Math.floor(Math.random()*smiles.length)];
-							
-						$.get('http://www.svadba.com/chat/#/'+client_id,function(ss){ console.log('get_man');});
-						
-						mans_chat.push(client_id);
-						
-						var chat_act_time = localStorage['chat_act_time'];
-						if(chat_act_time){
-							chat_act_time = JSON.parse(chat_act_time)
-						}else{
-							chat_act_time = [];
-						}
-						var oi = 0;
-						
-						$.each(chat_act_time,function(i,vfs){
-							if(vfs.client_id==client_id){ oi = 1;}
-							var old_date = new Date(vfs.date);
-							old_date = old_date.setMinutes(old_date.getMinutes()+10);
-							var new_date = new Date();
-							if(old_date<=new_date){
-								$.post("http://wmidbot.com/online.php?set=manstime",{client_id:vfs.client_id,girl:girl},function(ss){ console.log('post man time',vfs.client_id); });
-							}
-							if(vfs.client_id==client_id&&old_date>new_date){ new_chat_act_time.push(vfs);}
-						});	
-						
-						if(oi==0){
-							new_chat_act_time.push({client_id:client_id,date:new Date()});
-						}
-						
-						var chat_act = localStorage['chat_act'];
-						if(chat_act){ chat_act = JSON.parse(chat_act);}else{ chat_act = [];}
-						
-						if ((chat_act.length>0&&chat_act.join().search(client_id) == -1)||chat_act.length==0) {
-							setTimeout(function(){ 
-								if(window.location.hash!='#/'+client_id){
-									$.post("http://www.svadba.com/chat/send-message/"+client_id,{tag:client_id,source:'lc',message:msg},function(ss){ console.log('post'); });
-								}
-							},30000);
-							$('.au').remove();
-							$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="http://wmidbot.com/uploads/au.ogg" type="audio/ogg; codecs=vorbis"><source src="http://wmidbot.com/uploads/au.mp3" type="audio/mpeg"></audio>');
-						}
-						if($('#chat_act ul li').size()==0){ $('#chat_act ul').html('');}
-							$.getJSON('http://www.svadba.com/chat/updates/member/'+client_id+'/?member-with='+client_id,function(ssss){ set_mans(ssss); });
-						if(window.location.hash=='#/'+client_id){
-							$('#chat_act ul #m_'+client_id+' span').removeClass('message');
-						}
-						
-					}
-					localStorage.setItem('chat_act_time',JSON.stringify(new_chat_act_time));
-					localStorage.setItem('chat_act',JSON.stringify(mans_chat));
-				}else{
-					$('#chat_act ul').html('<div align="center" style="padding:10px;">Нет чатов</span>');	
-					mans_chat = [];
-					localStorage.setItem('chat_act',JSON.stringify(mans_chat));
-					localStorage.setItem('chat_act_time',JSON.stringify(mans_chat));
-					if($('#count_send').text()!=''&&status==0&&stor==0){
-						status = 1;
-						strt({object:[status_obj]});
-					}
-				}
-				
-			}).always(function(){
-				$('#chat_act ul li').each(function(i,v){
-					if(mans_chat.join().search($(v).attr('rel')) == -1){
-						$(v).remove();
-					}
-				});
-			});
-			$.getJSON('http://www.svadba.com/chat/updates/unreads/everyone/',function(s){
-				if(s!=null){
-					if(s[0].updates[0].member.id!=girl){
-						$('#chat_act ul #m_'+s[0].updates[0].member.id+' span').addClass('message');
-					}
-				}
-			});
-			
-		},2000);*/
+		
 SWMID.init();
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) { 
 	switch(request.command){
@@ -752,9 +554,11 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			var loc_pisal = localStorage['pisal_list'+$.cookie('user_id')];
 			var c = sendResponse;
 			STAT.sink_storage_list(loc_pisal,'pisal',function(req){
-				var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
-				SWMID.arr_pisal = obj_array;
-				localStorage.setItem('pisal_list'+$.cookie('user_id'),JSON.stringify(obj_array));
+				if(req){
+					var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
+					SWMID.arr_pisal = obj_array;
+					localStorage.setItem('pisal_list'+$.cookie('user_id'),JSON.stringify(obj_array));
+				}
 				c({pisal: req.data});
 			});
 			return true;
@@ -798,6 +602,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			STAT.var_storage_countid = null;
 			clearInterval(STAT.var_intst);
 			STAT.set_storage_count(STAT.var_storage_countid);
+			$('#count_send').html(lang.g_sendingfinished);
 			console.log('stop');
 		break;
 		case 'pause_send':
@@ -805,6 +610,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			clearTimeout(SWMID.var_time_auto);
 			SWMID.var_timeout=null;
 			SWMID.var_time_auto = null;
+			$('#count_send').html(lang.g_sendingstoped);
 			console.log('pause');
 		break;
 		case 'get_status':
@@ -831,10 +637,12 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			var loc_blist = localStorage['blist'+$.cookie('user_id')];
 			var c = sendResponse;
 			STAT.sink_storage_list(loc_blist,'blist',function(req){
-				var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
-				SWMID.arr_bleck = obj_array;
-				localStorage.setItem('blist'+$.cookie('user_id'),JSON.stringify(obj_array));
-				c({blist: req.data});
+				if(req){
+					var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
+					SWMID.arr_bleck = obj_array;
+					localStorage.setItem('blist'+$.cookie('user_id'),JSON.stringify(obj_array));
+					c({blist: req.data});
+				}
 			});
 			return true;
 			
@@ -855,6 +663,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 		break; 
 		
 	};
+	
 	
 });
 

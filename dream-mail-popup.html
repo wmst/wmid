@@ -1,311 +1,603 @@
-<div class="clear10"></div>
-<div class="message"></div>
-<div class="clear10"></div>
 <div class="home">
-    <div class="header">
-        <h1 class="logo"><a href="">WMID.com.ua Bot программы для брачных агенств для золушки, дрима, свадьбы, джампа</a></h1>
-        <div class="online"><div class="fl"><b class="tx_online" id="tx_online">0</b> Online Men's</div> <a href="#" class="up_online" id="up_online">&nbsp;</a></div>
-        <div class="clear10"></div>
-    </div>
-    <div class="content">
-        <div class="leftColumn">
-            <ul class="navi">
-                <li><a href="http://wmidbot.com/?page=help" target="_blank">Справка</a></li>
-                <li><a href="http://wmidbot.com/?page=dayactive" target="_blank">Продлить активацию</a></li>
-                <li><a href="#" id="blecklist_link">Черный список</a></li>
-                <li><a href="#" id="his">Очистить историю расслок</a></li>
-            </ul>
-            <div class="clear10"></div>
-            <div class="clear10"></div>
-            <div class="clear10"></div>
-            <div class="active">
-                <b>Активация писем до</b><div class="clear5"></div>
-                <b class="count" id="active_day"></b><div class="clear5"></div>
-            </div>
-            <div class="active">
-				Переменные:<br>
-				<b>{name}</b> имя<br>
-				<b>{age}</b> возраст<br>
-                <b>{n}</b> перевод строки
+	<div class="header">
+		<h1 class="logo"><a href="http://wmidbot.com" lng="g_logo">WMID.com.ua Bot программы для брачных агенств для золушки, дрима, свадьбы, джампа</a></h1>
+		<div class="clear10"></div>
+	</div>
+	<div class="content">
+		<div class="leftColumn">
+			<ul class="navi">
+				<li><a href="http://wmidbot.com/pages/#conte" target="_blank" lng="g_help">Справка</a></li>
+				<li><a href="http://wmidbot.com/" target="_blank" lng="g_bayact">Продлить активацию</a></li>
+				<li><a href="#" id="blacklist" lng="g_balcklist">Черный список</a></li>
+				<li><a href="#" id="writerslist" lng="g_pisallist">Список писателей</a></li>
+			</ul>
+			<div class="clear10"></div>
+			<div class="active">
+				<span lng="g_infotags">Переменные:</span><br />
+				<b>{Name}</b> <span lng="g_taglname">Имя</span><br />
+				<b>{Age}</b> <span lng="g_tagage">возраст</span>
 			</div>
-            <div class="clear10"></div>
-            <div class="photo"></div>
-        </div>
-        <div class="rightColumn no_act blist">
-        	<a href="#" class="back"><b>Назад</b></a><div class="clear10"></div>
-            <b class="title">Черный список</b>
-           	<select class="sel_100" id="blist" style="height:180px" multiple>
-            	<option>-Нет мужчин-</option>
-            </select>
-            <div class="clear10"></div>
-            <a href="#" class="Btn_normal" id="add_blist"><b>Добавить</b></a>
-            <a href="#" class="Btn_red_normal" id="rem_blist"><b>Удалить</b></a>
-            <div class="clear10"></div>
-        </div>
-        <div class="rightColumn home_r">
-        	<b class="title">Письмо</b>
-            <a href="#" id="add">Добавить</a>
-            <a href="#" id="edit">Править</a>
-            <a href="#" id="del">Удалить</a>
-           	<select class="sel_100" id="msg" multiple>
-            	<option>-Нет писем-</option>
-            </select>
-            <div class="size10">Для просмотра сообщения, наведите на него!</div>
-            <div class="clear10"></div>
-            <b class="title">Отсылать по</b>
-            <div class="clear5"></div>
-            <select class="sel_100" id="typeSend">
-                <option value="1">Online</option>
-                <option value="2">Фавориты</option>
-            </select>
-            <div class="clear10"></div>
-            <table width="75%" class="table_1">
-                <tr>
-                    <td>
-                        <b class="title">Возраст</b>
-                        <div class="clear5"></div>
-                        <input type="number" id="age-from" value="20" min="20" max="100" style="width:50px">
-                    </td>
-                    <td class="center"><b>-</b></td>
-                    <td>
-                        <b class="title">&nbsp;</b>
-                        <div class="clear5"></div>
-                        <input type="number" id="age-to" value="60" min="20" max="100" style="width:50px">
-                    </td>
-                </tr>
-            </table>
-            <div class="clear10"></div>
-            <b class="title">Фото</b>
-            <div class="clear5"></div>
-            <input type="file" id="photo">
+			<div class="clear10"></div>
             <div class="clear10"></div>
             <div class="clear10"></div>
-            <a href="#" class="Btn_big" id="start_send"><b>Начать рассылку</b></a>
-            <a href="#" class="Btn_big_red" id="end_send" style="display:none;"><b>Остановить рассылку</b></a>
-        </div>
-        <div class="clear"></div>
-    </div>
+			<div class="active">
+				<span lng="g_pay_to">Оплачено до:</span><br /><b id="payed"></b>
+			</div>
+			<div class="clear10"></div>
+		</div>
+		<div class="rightColumn" id="mainside">
+			<b class="title" lng="g_tema">Тема</b> <a href="#" id="addt" lng="g_add">Добавить</a> <a href="#" id="editt" lng="g_edit">Править</a> <a href="#" id="delt" lng="g_delete">Удалить</a>
+			<div class="clear5"></div>
+			<select class="sel_100" id="subject">
+				<option value="0" lng="g_notema">-нет тем-</option>
+			</select>
+			<div class="clear10"></div>
+			<textarea class="text_ms" id="text" placeholder="Add message"></textarea>
+			<div class="clear10"></div>
+			<b class="title" lng="g_sendfor">Отсылать по</b>
+			<div class="clear5"></div>
+			<select class="sel_100" id="goal">
+				<option value="search" lng="g_for_search">Поиск</option>
+				<option value="writers" lng="g_for_writers">По писателям</option>
+			</select>
+			<div class="clear10"></div>
+			<b class="title" lng="g_photos">Фотки</b>
+			<div class="clear5"></div>
+			<select class="sel_100" id="attach">
+				<option value="-1" lng="g_upload">-Загрузить-</option>
+				<option value="0" selected lng="g_nophoto">-без фотографии-</option>
+			</select><div id="loadfile"><input type="file" /></div> 
+			<div class="clear10"></div>
+			<table style="width:75%" class="table_1">
+				<tr>
+					<td>
+						<b class="title" lng="g_age_from">Взраст от</b>
+						<div class="clear5"></div>
+						<input type="number" id="age-from" value="20" min="20" max="100" style="width:50px" />
+					</td>
+					<td class="center"><b>&mdash;</b></td>
+					<td>
+						<b class="title" lng="g_to">до</b>
+						<div class="clear5"></div>
+						<input type="number" id="age-to" value="60" min="20" max="100" style="width:50px" />
+					</td>
+				</tr>
+			</table>
+			<div class="clear10"></div>
+			<a href="#" class="Btn_big" id="start"><b lng="g_start_send">Начать рассылку</b></a>
+			<a href="#" class="Btn_big_red" id="stop" style="display:none;"><b lng="g_stop_send">Остановить рассылку</b></a>
+			<div class="clear5"></div>
+			<img src="" alt="" id="preview">
+		</div>
+		<div class="rightColumn" style="display:none" id="blackside">
+			<div class="clear10"></div>
+			<b class="title" lng="g_balcklist">Черный список</b>
+			<div class="clear5"></div>
+			<select id="black" size="15" style="width:100%" multiple></select>
+			<div class="clear10"></div>
+			<a href="#" id="addb" class="Btn_normal" title="Add"><b>+</b></a> <a href="#" id="editb" class="Btn_normal"><b lng="g_edit">Править</b></a> <a href="#" id="delb" class="Btn_normal" style="background:#e14747;"><b lng="g_delete">Удалить</b></a>
+		</div>
+		<div class="rightColumn" style="display:none" id="writersside">
+			<div class="clear10"></div>
+			<b class="title" lng="g_pisallist">Список писателей</b>
+			<div class="clear5"></div>
+			<select id="writers" size="15" style="width:100%" multiple></select>
+			<div class="clear10"></div>
+			<a href="#" id="addw" class="Btn_normal" title="Add"><b>+</b></a> <a href="#" id="editw" class="Btn_normal"><b lng="g_edit">Править</b></a> <a href="#" id="delw" class="Btn_normal" style="background:#e14747;"><b lng="g_delete">Удалить</b></a>
+		</div>
+		<div class="clear"></div>
+	</div>
 </div>
-<div class="clear"></div>
-<script>
-var WMID = {
-	send: function(command, object, callback){
-		chrome.tabs.getSelected(null, function(tab) {
-		  chrome.tabs.sendMessage(tab.id, {command: command, object:object}, callback);
+<script type="text/javascript">//<![CDATA[
+var WLANG = {
+	init_html:function(){
+		$.each(lang,function(i,v){
+			$('[lng="'+i+'"').text(v);
 		});
 	}
 };
-var EWMID = {
-	init:function(){
-		EWMID.get_messages();
-		EWMID.events();
-		EWMID.get_blist();
-		EWMID.get_fav();
-		EWMID.get_online();
-		EWMID.get_active();
-		EWMID.get_status();
+WLANG.init_html();
+
+var STAT = {
+	var_name: udata.name,
+	var_site:'dream_mail',
+	var_storage_id: function(){
+		return localStorage[STAT.var_site+'storage_id_'+STAT.var_name];
 	},
-	displayFiles: function(files){
-		$.each(files, function(i, file) {      
-		  if (!file.type.match(/image. */)) {
-			  alert('Только картинка!');
-			return true;
-		  } 
-		  if(file.size>2097152){
-			  alert('Размер должен быть меньше 2 МБ');
-		  	return true;
-		  }
-		  $('.photo').html('');
-		  var img = $('<img/>').appendTo('.photo');
-		  var reader = new FileReader();
-		  reader.onload = (function(aimg) {
-			return function(e) {
-				WMID.send('set_photo',e.target.result,function(response){ console.log(response); });
-				aimg.attr('width',138);
-				aimg.attr('src', e.target.result);
-			};
-		  })(img);
-		  
-		  reader.readAsDataURL(file);
-		});
+	init: function(){
+		STAT.events();
+		STAT.get_storage_srv();
 	},
-	events:function(){
-		$('#his').click(function(){
-			WMID.send('hem_his','',function(res){ alert('Очищено!');});
-		});
-		$('#start_send').click(function(){
-			EWMID.start_send();
-		});
-		$('#end_send').click(function(){
-			EWMID.stop_send();
-		});
-		$('#photo').change(function(){
-			EWMID.displayFiles(this.files);
-		});
-		$('.back').click(function(){
-			$('.rightColumn').hide();
-			$('.home_r').show();
-		});
-		$('#blecklist_link').click(function(){
-			$('.rightColumn').hide();
-			$('.blist').show();
-		});
-		$('#add_blist').click(function(){
-			var msg=prompt('Введите ID мужчины!');
-			if(msg!=null){
-				WMID.send('add_blist',msg,function(res){
-					EWMID.get_blist();
-				});
-			}
-		});
-		$('#rem_blist').click(function(){
-			if(!$('#blist').val())
-				alert('Выберите мужчину!');
-			else
-				if (confirm("Удалить мужчину?")){
-					WMID.send('rem_blist',$('#blist').val(),function(res){
-						EWMID.get_blist();	
-					});
-				}
-		});
-		$('#add').click(function(){
-			var msg=prompt('Введите текст сообщения!','Hi {name}!')
-			if(msg!='Hi {name}!'&&msg!=null){
-				WMID.send('add_msg',msg,function(res){
-					EWMID.get_messages();
-				});
-			}
-		});
-		$('#edit').click(function(){
-			if(!$('#msg').val())
-				alert('Выберите сообщение!');
-			else
-				var msg=prompt('Введите текст сообщения!',EWMID.var_messages[$('#msg').val()].msg);
-				if(msg!='Hi {name}!'&&msg!=null){
-					WMID.send('edit_msg',{id:$('#msg').val(),msg:msg},function(res){
-						EWMID.get_messages();
-					});
-					EWMID.get_messages();
-				}
-		});
-		$('#del').click(function(){
-			if(!$('#msg').val())
-				alert('Выберите сообщение!');
-			else
-				if (confirm("Удалить сообщение?")){
-					var ar = [];
-					$.each(EWMID.var_messages,function(i,v){
-						if(i!=$('#msg').val()){
-							ar.push(v);
-						}
-					});
-					WMID.send('rem_msg',ar,function(res){
-						EWMID.get_messages();
-					});
-					EWMID.get_messages();
-				}
-		});
+	events: function(){
+		$('#payed').text(udata.date);
 	},
-	var_messages:[],
-	var_online:[],
-	var_fav:[],
-	var_blecklist:[],
-	get_status: function(){
-		WMID.send('get_photo','',function(res){ 
-			console.log(res.st);
-			if(res.photo){
-				$('.photo').html('<img src="'+res.photo+'" width="138">');
-			}
-			if(res.st==1){
-				$('#start_send').hide();
-				$('#end_send').show();
-			}
-		});
-	},
-	get_messages:function(){
-		WMID.send('get_msg','',function(res){
-			EWMID.var_messages = JSON.parse(res.msg);
-			if(EWMID.var_messages.length>0){
-				$('#msg').html('');
-				$.each(EWMID.var_messages,function(i,v){
-					$('#msg').append('<option value="'+i+'" title="'+v.msg+'">'+v.msg+'</option>');
-				});
-			}
-		});
-	},
-	get_online: function(){
-		$('#up_online').addClass('animate');
-		WMID.send('get_online','',function(res){
-			EWMID.set_online(res.online);
-		});
-	},
-	get_active:function(){
-		EWMID.set_active(localStorage.getItem("dream_mail"));
-	},
-	get_fav: function(){
-		WMID.send('get_fav','',function(res){
-			EWMID.set_fav(res.fav);
-		});
-	},
-	get_blist: function(){ 
-		WMID.send('get_blist','',function(res){
-			EWMID.set_blist(res.blist);
-		});
-	},
-	set_blist:function(d){
-		if(d.length>0){
-			$('#blist').html('');
-			EWMID.var_blecklist = d;
-			$.each(d,function(i,v){
-				$('#blist').append('<option value="'+v+'">'+v+'</option>');
-			});
+	get_storage_srv: function(){
+		if(STAT.var_storage_id()){
+			SM({type:"set_storage_id",data:STAT.var_storage_id()});
 		}else{
-			$('#blist').html('<option>-Нет мужчин-</option>');
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'get_storage_invites','data':{girl:STAT.var_name,site:STAT.var_site}},function(d){
+				if(d.data!=null){
+					localStorage.setItem(STAT.var_site+'storage_id_'+d.data.girl_id, d.data.id);
+					storage = JSON.parse(d.data.settings);
+					SaveStorage();
+					SM({type:"set_storage_id",data:STAT.var_storage_id()});
+					STAT.set_settings_controls();
+				}
+			});
 		}
 	},
-	set_fav: function(d){
-		d = JSON.parse(d);
-		$.each(d,function(i,v){
-			EWMID.var_fav.push({id:v['id_men'],receiver:v['id_receiver'],name:v['name_men'],age:v['age_men']});
-		});
-		$('#typeSend option:eq(1)').html($('#typeSend option:eq(1)').html()+'('+d.length+')');
+	set_storage_srv: function(obj){
+		if(obj){
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_invites','data':{girl:STAT.var_name,json:obj,site:STAT.var_site}},function(d){
+				if(d.data!=null){
+					localStorage.setItem(STAT.var_site+'storage_id_'+STAT.var_name, d.data);
+					SaveStorage();
+					SM({type:"set_storage_id",data:STAT.var_storage_id()});
+				}
+			});
+		}
 	},
-	set_online: function(d){
-		d = JSON.parse(d);
-		EWMID.var_online = [];
-		$.each(d,function(i,v){
-			if(EWMID.var_blecklist.join().search(v['id_men']) == -1){
-				var cop = 0;
-				for(var x in EWMID.var_fav){
-					if(v['id_men']==EWMID.var_fav[x].id){ cop = 1;}
-				}
-				if(cop==0){
-					EWMID.var_online.push({id:v['id_men'],receiver:v['id_receiver'],name:v['name_men'],age:v['age_men']});
-				}
+	set_settings_controls: function(call){
+			//Заполнение инфы из хранилища
+		$.each(storage, function (k, v) {
+			if (k == parseInt(k)) $("<option>")
+				.val(k)
+				.text(v.title)
+				.appendTo(subject)
+		});
+		var resave = false;
+		if (storage.goal) goal.val(storage.goal);
+		else resave = true;
+		if (storage.black) $.each(storage.black, function (k, v) {
+			$("<option>")
+				.text(v ? v : k)
+				.val(k)
+				.appendTo(black)
+		});
+		else storage.black = {};
+		if (storage.writers) $.each(storage.writers, function (k, v) {
+			$("<option>")
+				.text(v ? v : k)
+				.val(k)
+				.appendTo(writers)
+		});
+		else storage.writers = {};
+		af.change(function () {
+			storage.af = parseInt($(this)
+				.val());
+			if (storage.af >= parseInt(at.val())) at.val(storage.af);
+			SaveStorage()
+		});
+		at.change(function () {
+			storage.at = parseInt($(this)
+				.val());
+			if (storage.at <= parseInt(af.val())) af.val(storage.at);
+			SaveStorage()
+		});
+		goal.change(function () {
+			storage.goal = $(this)
+				.val();
+			SaveStorage()
+		});
+		text.change(function () {
+			if (storage.active in storage) {
+				storage[storage.active].text = $(this)
+					.val();
+				SaveStorage()
 			}
 		});
-		$('#tx_online').text(EWMID.var_online.length);
-		$('#up_online').removeClass('animate');
-	},
-	set_active:function(d){
-		d = d.split(',');
-		$('#active_day').text(d[2]+'.'+d[1]+'.'+d[0]);
-	},
-	start_send:function(){
-		if(EWMID.var_messages.length>0){
-		$('#start_send').hide();
-		$('#end_send').show();
-		list = EWMID.var_online;
-		if($('#typeSend').val()==2){ list = EWMID.var_fav;}
-		WMID.send('start_send',{type:$('#typeSend').val(),age_from:$('#age-from').val(),age_to:$('#age-to').val(),status:1,list:JSON.stringify(list)},function(res){}); 
-		}else{alert('Вы не добавили письмо!');}
-	},
-	stop_send:function(){
-		$('#start_send').show();
-		$('#end_send').hide();
-		WMID.send('end_send',{type:$('#typeSend').val(),age_from:$('#age-from').val(),age_to:$('#age-to').val(),status:0,list:JSON.stringify(EWMID.var_online)},function(res){}); 
+		$.each(init.attach, function (k, v) {
+			$("<option>")
+				.text(v[0])
+				.data("src", v[1])
+				.appendTo(attach)
+		});
+		attach.change(function () {
+			var a = $(":selected", this)
+				, file_url = init.file_url
+				, v = $(this)
+				.val()
+				, save = storage.attach != v;
+			if (v == 0) preview.add(loadfile)
+				.hide();
+			else if (v == -1) {
+				loadfile.show();
+				if (file_url) preview.show()
+					.prop("src", file_url);
+				else preview.hide()
+			} else {
+				loadfile.hide();
+				preview.show()
+					.prop("src", a.data("src"))
+			}
+			if (save) {
+				storage.attach = v;
+				SaveStorage()
+			}
+		});
+		loadfile.find("input")
+			.change(function (e) {
+				e.preventDefault();
+				var b = this.files[0]
+					, file_url = false
+					, rurl = new FileReader()
+					, rbin = new FileReader();
+				init.file_name = $(this)
+					.val()
+					.split(/(\\|\/)/g)
+					.pop();
+				rurl.onload = function (a) {
+					file_url = a.target.result;
+					rbin.readAsBinaryString(b)
+				};
+				rbin.onload = function (a) {
+					init.file_bin = a.target.result;
+					init.file_mime = file_url.split(";")[0].split(":")[1];
+					init.file_url = file_url;
+					preview.show()
+						.prop("src", file_url);
+					SaveStorage()
+				};
+				rurl.readAsDataURL(b)
+			});
+		if (storage.attach) attach.val(storage.attach);
+		else resave = true;
+		attach.change();
+		preview.click(function () {
+			window.open($(this)
+				.data("src"))
+		});
+		subject.change(function () {
+			var v = $(this)
+				.val()
+				, save = storage.active != v
+				, controls = $("#delt,#editt,#savet,#start");
+			if (save) SaveTemplate();
+			if (v == "0") {
+				controls.prop("disabled", true);
+				text.val(text.prop("defaultValue"));
+				af.val(af.prop("defaultValue"));
+				at.val(at.prop("defaultValue"));
+				Status(0)
+			} else if (!(v in storage)) $("option:selected", this)
+				.remove();
+			else {
+				af.val(storage[v].af);
+				at.val(storage[v].at);
+				text.val(storage[v].text);
+				Status(storage[v].cnt);
+				controls.prop("disabled", false)
+			}
+			if (save) {
+				storage.active = v;
+				SaveStorage()
+			}
+		});
+		if (storage.active) subject.val(storage.active);
+		else resave = true;
+		subject.change();
+		if (resave) {}
+		if(call){
+			return call();
+		}
 	}
-	
-};
-EWMID.init();
-</script>
+}
+var init = $("body")
+    .data("init")
+    , storage = init.storage
+    , black = $("#black")
+    , af = $("#age-from")
+    , at = $("#age-to")
+    , subject = $("#subject")
+    , text = $("#text")
+    , goal = $("#goal")
+    , start = $("#start")
+    , stop = $("#stop")
+    , attach = $("#attach")
+    , preview = $("#preview")
+    , writers = $("#writers")
+    , mainside = $("#mainside")
+    , blackside = $("#blackside")
+    , writersside = $("#writersside")
+    , loadfile = $("#loadfile")
+    , EnableSubject = function () {
+		STAT.init();
+        var a = $("#subject option:first");
+        if (subject.find("option")
+            .size() > 1) {
+            subject.prop("disabled", false);
+            a.text(lang.g_temas)
+        } else {
+            subject.prop("disabled", true);
+            a.text(lang.g_notema)
+        }
+    }
+    , SaveTemplate = function () {
+        if (storage.active in storage) $.extend(storage[storage.active], {
+            text: text.val()
+            , af: af.val()
+            , at: at.val()
+        })
+    }
+    , Start = function () {
+		STAT.set_storage_srv(storage);
+        stop.show();
+        start.hide();
+        $("#text,#age-from,#age-to,#goal,#subject,#blacklist,#writerslist,#attach,#loadfile file")
+            .prop("disabled", true)
+    }
+    , Stop = function () {
+        start.show();
+        stop.hide();
+        $("#text,#age-from,#age-to,#goal,#blacklist,#writerslist,#attach,#loadfile file")
+            .prop("disabled", false);
+        EnableSubject()
+    }
+    , SaveStorage = function () {
+        SM({
+            type: "save"
+            , storage: storage
+            , file_bin: init.file_bin
+            , file_url: init.file_url
+            , file_name: init.file_name
+            , file_mime: init.file_mime
+        })
+    }
+    , Status = function (a) {
+        SM({
+            type: "status"
+            , sent: a
+        })
+    };
+$("#payed")
+    .text(rdate.substr(0, 16))
+    .prop("title", lang.g_pay_to+" " + remain);
+$("#blacklist")
+    .click(function () {
+        if (blackside.is(":visible")) {
+            blackside.add(writersside)
+                .hide();
+            mainside.show()
+        } else {
+            mainside.add(writersside)
+                .hide();
+            blackside.show()
+        }
+        return !1
+    });
+$("#writerslist")
+    .click(function () {
+        if (writersside.is(":visible")) {
+            blackside.add(writersside)
+                .hide();
+            mainside.show()
+        } else {
+            mainside.add(blackside)
+                .hide();
+            writersside.show()
+        }
+        return !1
+    });
+$("#addb")
+    .click(function () {
+        var n = prompt(lang.g_addidman);
+        if (n !== null) {
+            $.each(n.split(/\D+/), function (k, v) {
+                if (black.find("[value=" + v + "]")
+                    .size() == 0) {
+                    $("<option>")
+                        .text(v)
+                        .appendTo(black);
+                    black.val(v);
+                    storage.black[v] = ""
+                }
+            });
+            SaveStorage()
+        }
+        return !1
+    });
+$("#editb")
+    .click(function () {
+        var t = $("#black :selected")
+            , text = [];
+        if (t.size() > 0) {
+            t.each(function () {
+                text.push($(this)
+                    .val())
+            });
+            text = prompt(lang.g_editwrite, text.join(", "));
+            if (text !== null) {
+                t.each(function () {
+                        delete storage.black[$(this)
+                            .val()]
+                    })
+                    .remove();
+                $.each(text.split(/\D+/), function (k, v) {
+                    if (black.find("[value=" + v + "]")
+                        .size() == 0) {
+                        $("<option>")
+                            .text(v)
+                            .appendTo(black);
+                        black.val(v);
+                        storage.black[v] = ""
+                    }
+                });
+                SaveStorage()
+            }
+        }
+        return !1
+    });
+$("#delb")
+    .click(function () {
+        var t = $("#black :selected");
+        t.each(function () {
+                delete storage.black[$(this)
+                    .val()]
+            })
+            .remove();
+        SaveStorage();
+        return !1
+    });
+$("#addw")
+    .click(function () {
+        var n = prompt(lang.g_addidman);
+        if (n !== null) {
+            $.each(n.split(/\D+/), function (k, v) {
+                console.log(v);
+                if (writers.find("[value=" + v + "]")
+                    .size() == 0) {
+                    $("<option>")
+                        .text(v)
+                        .appendTo(writers);
+                    writers.val(v);
+                    storage.writers[v] = ""
+                }
+            });
+            SaveStorage()
+        }
+        return !1
+    });
+$("#editw")
+    .click(function () {
+        var t = $("#writers :selected")
+            , text = [];
+        if (t.size() > 0) {
+            t.each(function () {
+                text.push($(this)
+                    .val())
+            });
+            text = prompt(lang.g_editwrite, text.join(", "));
+            if (text !== null) {
+                t.each(function () {
+                        delete storage.writers[$(this)
+                            .val()]
+                    })
+                    .remove();
+                $.each(text.split(/\D+/), function (k, v) {
+                    if (writers.find("[value=" + v + "]")
+                        .size() == 0) {
+                        $("<option>")
+                            .text(v)
+                            .appendTo(writers);
+                        writers.val(v);
+                        storage.writers[v] = ""
+                    }
+                });
+                SaveStorage()
+            }
+        }
+        return !1
+    });
+$("#delw")
+    .click(function () {
+        var t = $("#writers :selected");
+        t.each(function () {
+                delete storage.writers[$(this)
+                    .val()]
+            })
+            .remove();
+        SaveStorage();
+        return !1
+    });
+STAT.set_settings_controls();
+
+$("#addt")
+    .click(function () {
+        var n = prompt(lang.g_addtema);
+        if (n) {
+            $("<option>")
+                .val(storage.last)
+                .text(n)
+                .appendTo(subject);
+            storage[storage.last] = {
+                title: n
+                , text: text.val()
+                , af: af.val()
+                , at: at.val()
+                , sent: ","
+                , cnt: 0
+                , offlinepage: 0
+            };
+            EnableSubject();
+            if (init.runned) storage.last++;
+            else subject.val(storage.last++)
+                .change();
+            SaveStorage()
+        }
+        return false
+    });
+$("#savet")
+    .click(function () {
+        SaveTemplate();
+        SaveStorage()
+    });
+$("#editt")
+    .click(function () {
+        if (!init.runned) {
+            var v = subject.val()
+                , t = $("#subject option:selected")
+                , n;
+            if (v > 0) {
+                n = prompt(lang.g_addnewtema, t.text());
+                if (n && v in storage) {
+                    t.text(n);
+                    storage[v].title = n;
+                    SaveStorage()
+                }
+            }
+        }
+        return false
+    });
+$("#delt")
+    .click(function () {
+        if (!init.runned) {
+            var v = subject.val()
+                , t = $("#subject option:selected");
+            if (v > 0 && (!(v in storage) || confirm(lang.g_realydelletter+" \"" + t.text() + "\"?"))) {
+                var a = t.next()
+                    .size() > 0 ? t.next() : t.prev();
+                t.remove();
+                delete storage[v];
+                subject.val(a.val())
+                    .change();
+                EnableSubject()
+            }
+        }
+        return false
+    });
+if (init.runned) Start();
+start.click(function () {
+    if (!(storage.active in storage)) alert(lang.g_selecttemaletter);
+    else if (init.limit) alert(lang.g_limitleterisfail);
+    else if (storage[storage.active].text == "") alert(lang.g_addtextletter);
+    else if (storage[storage.active].title == "") alert(lang.g_addtema);
+    else if (storage.goal == "writers" && $.isEmptyObject(storage.writers)) {
+        alert(lang.g_addpisalman);
+        $("#writerslist")
+            .click()
+    } else SM({
+        type: "start"
+        , file_bin: init.file_bin
+        , file_url: init.file_url
+        , file_name: init.file_name
+        , file_mime: init.file_mime
+    }, function (r) {
+        if (r) {
+            init.runned = true;
+            Start()
+        }
+    })
+});
+stop.click(function () {
+    SM({
+        type: "stop"
+    }, function (r) {
+        if (r) {
+            init.runned = false;
+            Stop()
+        }
+    })
+});
+EnableSubject();
+
+//]]></script>

@@ -1,217 +1,297 @@
-var status_obj;
-var nss = 0;
-var interval;
-var request_man = [];
-var user;
-var receiver;
-var status = 0;
-var blist = [];
-var Chat = {};
-
-$.get('//www.dream-marriage.com/members/options.php',function(s){
-	var href = $(s).find('.account_options_links li:eq(1) a').attr('href');
-	user = href.replace(/[^0-9]+/ig,"");
-	$.get('//www.dream-marriage.com/'+user+'.html',function(d){
-		receiver = $(d).find('.profile-button-email').parent().attr('onclick').replace(/[^0-9]+/ig,"");
-		var name = $(d).find('.profile_name p:eq(0)').text().split(',')[0];
-		localStorage.setItem("receiver", receiver);
-		localStorage.setItem("user", user);
-	});
-	if(window.location.href.indexOf('dream-marriage.com/chat') > 1){
+(function($){
+	var PAGEHASH=IDSLUG=false;
 	$('head script').each(function(i,v){
 		if($(v).text().indexOf('Chat.PAGEHASH')>1){
 			var te = $(v).text().split('\n');
-			eval($.trim(te[4].split(' ').join('')));
-			eval($.trim(te[5].split(' ').join('')));
-		}
-	});
-	}
-});
-
-if(window.location.href.indexOf('dream-marriage.com/chat') > 1){
-	if($.cookie('sinc')==null){
-		var date = new Date();
-		var minutes = 60;
-		date.setTime(date.getTime() + (minutes * 60 * 1000));
-		$.cookie('sinc', "true", { expires: date, path: '/' });
-		var ts = Math.round((new Date()).getTime() / 1000);
-		var s = 0;
-		
-		$.getJSON('http://www.dream-marriage.com/chat/ajax.php?ts='+ts+'&pid='+$.cookie('user_id')+'&__tcAction=onlineListRequest',function(d){
-			var ret = d[0].data.length;
-			for(i=0;i<ret;i++){
-				var obj = {};
-				obj.id_men = d[0].data[i].id;
-				obj.name_men = d[0].data[i].displayname;
-				obj.age_men = d[0].data[i].age;
-				//obj.id_receiver = id_receiver;
-				request_man.push(obj);
-				s++;
-				if(s==ret){
-					var date = new Date();
-					var minutes = 60;
-					date.setTime(date.getTime() + (minutes * 60 * 1000));
-					$.cookie('sinc', "true", { expires: date, path: '/' });
-					localStorage.setItem("online", JSON.stringify(request_man));
-					console.log(localStorage['online']);
-				}
-				/*$.get('http://www.dream-marriage.com/russian-women-gallery.php?all=men&online_dropdown=1&page='+i+'&ini='+i,function(data){
-					
-					
-					$(data).find('.dmcontent>table:eq(0)>tbody>tr>td').each(function(){
-						var name_men = $(this).find('tr:eq(0) td:eq(1) a').text();
-						var age_men = $(this).find('tr:eq(1) td:eq(1)').text();
-						var id_men = $(this).find('tr:eq(4) td:eq(1)').text();
-						var id_receiver_str = $(this).find('tr:eq(5) td a:eq(1)').attr('href');
-						var id_receiver = id_receiver_str.replace(/[^0-9]+/ig,"");
-						var obj = {};
-						obj.id_men = id_men;
-						obj.name_men = name_men;
-						obj.age_men = age_men;
-						obj.id_receiver = id_receiver;
-						request_man.push(obj);
-					});
-					s++;
-					if(s==ret){
-						var date = new Date();
-						var minutes = 60;
-						date.setTime(date.getTime() + (minutes * 60 * 1000));
-						$.cookie('sinc', "true", { expires: date, path: '/' });
-						localStorage.setItem("online", JSON.stringify(request_man));
-						console.log(localStorage['online']);
-					}
-				});*/
-				
-			}
-			
-		});
-	}
-}
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-	switch(request.command){
-		case 'get_man':
-			window.location.href = '#/'+request.object;
-		break;
-		case 'get_contact':
-			$('body').append('<a href="#" onclick="$(\'.get_contacts\').html(JSON.stringify(chat.chatcontacts.contacts));" class="get_contacts" style="display:none;"></a>');
-			$('.get_contacts').click();
-			sendResponse({contact: $('.get_contacts').html()});
-		break;
-		case 'get_user': 
-			
-			
-		break;
-		case 'start_send': 
-			var obj = status_obj = request.object[0];
-			if(obj.speed==0){
-				var speed = 3000;
-			}else if(obj.speed==1){
-				var speed = 1000;
-			}else if(obj.speed==2){
-				var speed = 500;
-			}
-			interval = setInterval(function(){
-				
-				if(obj.list[nss]){
-					if(obj.list[nss].age>=(obj.age_from-0)&&obj.list[nss].age<=(obj.age_to-0)){
-						if(obj.list[nss].id!=6048){
-							if(obj.fone==0){
-								var el = document.createElement('script');
-								el.innerHTML = "chat.clickUser("+obj.list[nss].id+",6);";
-								document.head.appendChild(el);
-								$('head script:last').remove();	
-								if($('.messagebox #name').text()==obj.list[nss].name){
-									var message = obj.message.split('{name}').join(obj.list[nss].name).split('{age}').join(obj.list[nss].age);
-									$('#message').val(message);	
-									var el = document.createElement('script');
-									el.innerHTML = "setTimeout(function(){ $('#button-send input').click();},100);";
-									document.head.appendChild(el);
-									$('head script:last').remove();
-								}
-							}else{
-								var message = obj.message.split('{name}').join(obj.list[nss].name).split('{age}').join(obj.list[nss].age);
-								
-								$.post('http://www.dream-marriage.com/chat/ajax.php?ts='+new Date().getTime()+'&pid='+user,{
-											__tcAction:'sendMessage',
-											chatid:'',
-											message:message,
-											targetid:obj.list[nss].id,
-											pagehash:Chat.PAGEHASH,
-											idslug:Chat.IDSLUG,
-											auto_invite:'off'
-								},function(){
-									console.log(message);
-								});
-							}
-						}
-					}
-					$('#count_send').text('Отослано: '+nss+' из '+obj.list.length+'');
-					nss +=1;
-					status = 1;
-				}else{
-					clearInterval(interval);
-					status = 0;
-					nss = 0;
-					console.log('stop');
-				}
-			},speed);
-		break;
-		case 'end_send': 
-			clearInterval(interval);
-			status = 0;
-			console.log('stop');
-		break;
-		case 'get_status':
-			sendResponse({status: status,statusobj:status_obj});
-		break;
-		case 'get_online': 
-			sendResponse({online:localStorage['online']});
-		break;
-		case 'add_blist_chat':
-			var man = request.object;
-			if(blist.join().search(man) == -1){
-				blist.push(man);
-				localStorage.setItem('blist'+user,blist);
-				sendResponse({d: true});
-			}
-		break; 
-		case 'get_blist_chat':
-			if(localStorage['blist'+user]){
-				blist = localStorage['blist'+user].split(',');
-			}
-			sendResponse({blist: blist});
-		break; 
-		case 'rem_blist_chat':
-			var man = request.object;
-			blist = [];
-			blists = localStorage['blist'+user].split(',');
-			$.each(blists,function(i,v){
-				if(man!=v){
-					blist.push(v);
+			$.each(te,function(ig,vg){
+				if(vg.indexOf('Chat.PAGEHASH')!=-1
+				 ||vg.indexOf('Chat.IDSLUG')!=-1){
+					eval($.trim(vg).replace("Chat.",""));
 				}
 			});
-			localStorage.setItem('blist'+user,blist);
-			sendResponse({d: true});
-		break;  
-	};
-});
-$('body').prepend('<div id="count_send" style="top: 76px; font-size: 15px;"></div>');
-function translb(sel){
-	$(sel).after('<a href="javascript:void(0)" id="wmid_trans" style="width:112px; height: 30px; background: #26ade4; text-indent: 0; line-height: 30px; margin-right: 10px; margin-top: 1px; font-weight: bold; color: #fff; float:right;text-decoration: none;font-size: 12px;text-align: center;">WMID Translate</a><style>div.chatbody #buttons {width:250px;}</style>');
-	$('#wmid_trans').click(function(){
-		console.log($('#message').val());
-		//$.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20140925T082047Z.5055d7e52197b592.bda3ad29dbb6a6aa6d19098d6e9748aca550221e&text='+encodeURIComponent(unescape($('#message').val()))+'&lang=en',function(s){
+		}
+	});
+	if(PAGEHASH&&IDSLUG){
+		/*~~~~~~~STAT~~~~~~~~*/
+		var STAT = {
+			var_name: name,
+			var_site:'dream_chat',
+			var_storage_countid:null,
+			var_storage_id:null,
+			var_intst:null,
+			var_count_send:{from:0,to:0},
+			init: function(){
+				STAT.set_isonline();
+				setInterval(function(){STAT.set_isonline();},60000);
+			},
+			set_isonline: function(){
+				$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:name,site:STAT.var_site}},function(){});
+			},
+			set_storage_count: function(id){
+				if(runned==true){
+					$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_count','data':{girl:name,storage_id:STAT.var_storage_id,json:(id!=null?{id:id,count:STAT.var_count_send}:{count:STAT.var_count_send}),site:STAT.var_site}},function(d){
+						if(d.data!=null){
+							STAT.var_storage_countid = d.data.id;
+						}
+					});
+				}
+			}
+		};
+		
+	/*~~~~~~~STAT~~~~~~~~*/
+	$(".chatbody").prepend("<div class=\"block-container\" style=\"font-size:18px;\"><div class=\"block-head\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span> <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div></div>");
+	$('.contactlist').before($('#chatpopupbutton').css('width','97%'));
+	$('#button-send').after('<a href="javascript:void(0)" id="wmid_trans" style="width:112px; height: 30px; background: #26ade4; text-indent: 0; line-height: 30px; margin-right: 10px; margin-top: 1px; font-weight: bold; color: #fff; float:right;text-decoration: none;font-size: 12px;text-align: center;">WMID Translate</a><style>div.chatbody #buttons {width:250px;}</style>');
+	$('#wmid_trans').click(function(){//$.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20140925T082047Z.5055d7e52197b592.bda3ad29dbb6a6aa6d19098d6e9748aca550221e&text='+encodeURIComponent(unescape($('#message').val()))+'&lang=en',function(s){
 			$.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20150126T184957Z.5fb6344ed3c2ac7e.91869e08ede68d44e7604f7b6f5eaba93238c8dc&text='+encodeURIComponent(unescape($('#message').val()))+'&lang=en',function(s){
 			console.log(s.text);
 			if(s.code==200){$('#message').val(unescape(encodeURIComponent(s.text[0])));}
 		});
 	});
-}
-translb('#button-send');
+	var runned=false,
+		info=$("#infohelp"),
+		tinfo=$("#infotext"),
+		key="dream-chat-"+name,
+		storage=localStorage.getItem(key),
+		queue=[],//Очередь на отправку
+		SaveStorage=function()
+		{
+			try
+			{
+				localStorage.setItem(key,JSON.stringify(storage));
+			}
+			catch(e)
+			{
+				if(e==QUOTA_EXCEEDED_ERR)
+					alert(lang.g_quotaextended);
+			}
+		},
+		Status=function(sent)
+		{
+			STAT.var_count_send.from=sent;
+			STAT.var_count_send.to=queue.length;
+			info.text(sent+" <- "+queue.length);
+		},
 
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-	if(request.type=='init'){
-		var uid = document.cookie.match(new RegExp("(?:^|; )" + 'uid'.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-		sendResponse({name: uid?decodeURIComponent(uid[1]):'undefined'});
+		tos,top,//TimeOut parser & sender
+		sentids=",",//Те, кто уже в чат-листе
+		inprogress=",",//Те, кто уже в очереди
+		cnt=0,//Отправлено, очередь на отправку
+		Stop,
+		StartSender=function()
+		{
+			if(queue.length>0)
+			{
+				var mess=queue.shift();
+				if($.inArray(mess.id,[6048])==-1){
+					console.log(mess);
+					/*var el = document.createElement('script');
+								el.innerHTML = "chat.clickUser("+mess.id+",6);";
+								document.head.appendChild(el);
+								$('head script:last').remove();*/
+					$.post(
+						location.protocol+"//"+location.hostname+"/chat/ajax.php?ts="+(new Date().getTime())+"&pid="+name,
+						{
+							"__tcAction":"sendMessage",
+							chatid:"",
+							message:mess.t,
+							targetid:mess.id,
+							pagehash:PAGEHASH,
+							idslug:IDSLUG,
+							auto_invite:"off"
+						},
+						function(data)
+						{
+							
+							/*$.post(
+								location.protocol+"//"+location.hostname+"/chat/ajax.php?ts="+(new Date().getTime())+"&pid="+name,
+								{
+									"__tcAction":"addContact",
+									data:data[0].data.userid,
+									pagehash:PAGEHASH,
+									idslug:IDSLUG,
+									auto_invite:"off"
+								});*/
+							mess.F(true);
+						},
+						"json"
+					).fail(function(){ mess.F(false) });
+				}else{
+					mess.F(false);
+				}
+			}
+
+			if(runned)
+				if(storage.goal!="online" && queue.length==0)
+				{
+					Stop();
+					alert(lang.g_sendingfinished);
+				}
+				else
+					tos=setTimeout(StartSender,1000+Math.random()*1000);
+		},
+
+		Parse4Send=function(r,page)
+		{
+			if(queue.length>0)
+			{
+				tos=setTimeout(function(){ Parse4Send(r,page); },1000);
+				return;
+			}
+			$.each(r[0].data,function(k,v){
+				v.id=parseInt(v.id);
+				v.age=parseInt(v.age);
+				storage.at=parseInt(storage.at);
+				storage.af=parseInt(storage.af);
+				if(storage.af<=v.age && v.age<=storage.at && inprogress.indexOf(","+v.id+",")==-1 && sentids.indexOf(","+v.id+",")==-1 && !(v.id in storage.black))
+				{
+					inprogress+=v.id+",";
+
+					queue.push({
+						id:v.id,
+						t:storage.text.replace(/{name}/ig,v.displayname).replace(/{age}/ig,v.age),
+						F:function(success)
+						{
+							if(success)
+							{
+								sentids+=v.id+",";
+								++cnt;
+							}
+							Status(cnt);
+						}
+					});
+					
+
+					if(runned)
+						Status(cnt);
+				}
+			});
+			/*if(runned)
+			{
+				page=r.result!="ok" || r[0].data.length==0 || r.online.pager.cnt<=r.online.pager.num ? 1 : page+1;
+				top=setTimeout(function(){
+					$.post(
+						location.protocol+"//"+location.hostname+"/chat/ajax.php?ts="+(new Date().getTime())+"&pid="+name,
+						{
+							"__tcAction":"onlineListRequest",
+							idslug:IDSLUG,
+							auto_invite:"off"
+						},
+						function(r){
+							Parse4Send(r,page);
+						},
+						"json"
+					);
+				},1000);
+			}*/
+		};
+	Stop=function()
+	{
+		if(runned)
+		{
+			runned=false;
+			clearTimeout(tos);
+			clearTimeout(top);
+			sentids=",";
+			inprogress=",";
+			queue=[];
+		}
+		Status(cnt);
+		tinfo.text(lang.g_sendingstoped).css("color","");
+	};
+
+	storage=storage ? $.parseJSON(storage)||{} : {};
+	if(typeof storage.black=="undefined")
+		storage={black:{},goal:"online",af:30,at:100,text:""};
+
+	MessHandle=function(obj,sender,CB)
+	{
+		switch(obj.type)
+		{
+			case "init":
+				CB({
+					name:name,
+					runned:runned,
+					storage:storage
+				});
+			break;
+			case "save":
+				storage=obj.storage;
+				SaveStorage();
+			break;
+			case "start":
+				setTimeout(function(){STAT.set_storage_count(STAT.var_storage_countid);},2000);
+				STAT.var_intst = setInterval(function(){STAT.set_storage_count(STAT.var_storage_countid);},30000);
+				if(!runned)
+				{
+					runned=true;
+					sentids=",";
+					inprogress=",";
+					if(storage.goal=="online")
+					{
+						/*$("#contacts_table tr[id^=\"contact-user-\"]").each(function(){
+							inprogress+=$(this).prop("id").replace("contact-user-","")+",";
+						});*/
+
+						$.post(
+							location.protocol+"//"+location.hostname+"/chat/ajax.php?ts="+(new Date().getTime())+"&pid="+name,
+							{
+								"__tcAction":"onlineListRequest",
+								idslug:IDSLUG,
+								auto_invite:"off"
+							},
+							function(r){
+								Parse4Send(r,1);
+							},
+							"json"
+						);
+					}
+					else
+					{
+						$("#contact-list .item-list").children("div").each(function(){
+							var id=parseInt($(this).prop("id").replace("contact-user-",""));
+
+							if(id>0 && inprogress.indexOf(","+id+",")==-1 && sentids.indexOf(","+id+",")==-1 && !(id in storage.black))
+							{
+								inprogress+=id+",";
+
+								queue.push({
+									id:id,
+									t:storage.text.replace(/{login}/ig,$("a:first",this).text()),
+									F:function(success){
+										if(success)
+										{
+											sentids+=id+",";
+											++cnt;
+										}
+										Status(cnt);
+									}
+								});
+								Status(cnt);
+							}
+						});
+					}
+
+					StartSender();
+					if(runned)//Рассылка могла стопануться так и не начавшись
+						tinfo.text(lang.g_sendinggo).css("color","green");
+				}
+				CB(true);
+			break;
+			case "stop":
+				STAT.var_storage_countid = null;
+				clearInterval(STAT.var_intst);
+				console.log(STAT.var_storage_countid);
+				STAT.set_storage_count(STAT.var_storage_countid);
+				Stop();
+				CB(true);
+			break;
+			case 'set_storage_id':
+				localStorage.setItem(STAT.var_site+'storage_id_'+name,obj.data);
+				STAT.var_storage_id = localStorage[STAT.var_site+'storage_id_'+name];
+			break;
+		}
 	}
-});
+	}
+	STAT.init();
+})(jQuery);

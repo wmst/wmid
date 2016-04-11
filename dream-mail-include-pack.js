@@ -1,321 +1,404 @@
-var status_obj;
-var nss = 0;
-var interval;
-var request_man = [];
-var user;
-var receiver;
-var status = 0;
-var blist = [];
-var photo = '';
-var hist = [];
-
-$.get('//www.dream-marriage.com/members/options.php',function(s){
-	var href = $(s).find('.account_options_links li:eq(1) a').attr('href');
-	user = href.replace(/[^0-9]+/ig,"");
-	$.get('//www.dream-marriage.com/'+user+'.html',function(d){
-		receiver = $(d).find('.profile-button-email').parent().attr('onclick').replace(/[^0-9]+/ig,"");
-		var name = $(d).find('.profile_name p:eq(0)').text().split(',')[0];
-		localStorage.setItem("receiver", receiver);
-		localStorage.setItem("user", user);
-	});
-});
-
-if(window.location.href.indexOf('dream-marriage.com') > 1){
-if($.trim($('.menubtn:eq(1)').text())!='Log-In'){
-	$('body').prepend('<div id="count_send"></div>');
-	if($.cookie('sinc')==null){
-		var date = new Date();
-		var minutes = 60;
-		date.setTime(date.getTime() + (minutes * 60 * 1000));
-		
-		var ts = Math.round((new Date()).getTime() / 1000);
-		var s = 0;
-		
-		$.getJSON('http://www.dream-marriage.com/chat/ajax.php?ts='+ts+'&pid='+$.cookie('user_id')+'&__tcAction=onlineListRequest',function(d){
-			var ret = Math.round(d[0].data.length/15);
-			
-			//$('body').append('<div id="sincs" style="position: fixed;top: 0;right: 0;left: 0;bottom: 0;background: #fff;opacity: 0.9;font-size: 29px;text-align: center;padding-top: 209px;">Подождите...</div>');
-			function sisi(s,request_man){	
-			//for(i=0;i<ret;i++){
-				i=s;
-				$.get('http://www.dream-marriage.com/russian-women-gallery.php?all=men&online_dropdown=1&page='+i+'&ini='+i,function(data){
-					
-					if(data){
-					$(data).find('.dmcontent>table:eq(0)>tbody>tr>td').each(function(){
-						var name_men = $(this).find('tr:eq(0) td:eq(1) a').text();
-						var age_men = $(this).find('tr:eq(1) td:eq(1)').text();
-						var id_men = $(this).find('tr:eq(4) td:eq(1)').text();
-						var id_receiver_str = $(this).find('tr:eq(5) td a:eq(1)').attr('href');
-						var id_receiver = id_receiver_str.replace(/[^0-9]+/ig,"");
-						var obj = {};
-						obj.id_men = id_men;
-						obj.name_men = name_men;
-						obj.age_men = age_men;
-						obj.id_receiver = id_receiver;
-						request_man.push(obj);
-					});
+(function($){
+	/*~~~~~~~STAT~~~~~~~~*/
+	var STAT = {
+		var_name: name,
+		var_site:'dream_mail',
+		var_storage_countid:null,
+		var_storage_id:null,
+		var_intst:null,
+		var_count_send:{from:0,to:0},
+		init: function(){
+			STAT.set_isonline();
+			setInterval(function(){STAT.set_isonline();},60000);
+		},
+		set_isonline: function(){
+			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:name,site:STAT.var_site}},function(){});
+		},
+		set_storage_count: function(id){
+			if(runned==true){
+				$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_count','data':{girl:name,storage_id:STAT.var_storage_id,json:(id!=null?{id:id,count:STAT.var_count_send}:{count:STAT.var_count_send}),site:STAT.var_site}},function(d){
+					if(d.data!=null){
+						STAT.var_storage_countid = d.data.id;
 					}
-					
-					
-				}).always(function() {
-					s++;
-					if(s==ret){
-						var date = new Date();
-						var minutes = 60;
-						date.setTime(date.getTime() + (minutes * 60 * 1000));
-						$.cookie('sinc', "true", { expires: date, path: '/' });
-						localStorage.setItem("online", JSON.stringify(request_man));
-						$('#sincs').remove();
-					}else{
-						sisi(s,request_man);
-					}
-				 });
-				
+				});
 			}
-			sisi(0,request_man);
-			
-		});
-	}
-	if($.cookie('sincfv'+user)==null){
-		var date = new Date();
-		var minutes = 120;
-		date.setTime(date.getTime() + (minutes * 60 * 1000));
-		$.cookie('sincfv'+user, "true", { expires: date, path: '/' });
-		var ts = Math.round((new Date()).getTime() / 1000);
-		var s = 0;
-		var ar_fav = [];
-		$.get('http://www.dream-marriage.com/members/my_favorites.php?all=1',function(d){
-			$(d).find('#favList .groups').each(function(i,v){
-				var name = $(v).find('.la').html();
-				var age = $(v).find('.lc').html();
-				var id = $(v).find('.lc:eq(3)').html();
-				var receiver = $(v).find('.details tr:last a:eq(1)').attr('href').replace(/[^0-9]+/ig,"");
-				var obj = {};
-				obj.id_men = id;
-				obj.name_men = name;
-				obj.age_men = age;
-				obj.id_receiver = receiver;
-				ar_fav.push(obj);
-				localStorage.setItem("fav"+user, JSON.stringify(ar_fav));
-			});
-		});
-	}
-}
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-	if(request.object){
-	var obj = status_obj = request.object;
-	if(obj.list){
-		obj.list = JSON.parse(obj.list);
-	}
-	function gogogo(nss){
-		
-		console.log('statusstatus:',status);
-		if(status==1){
-		$('#count_send').text('Не покидайте страницу во время рассылки! Отослано: '+nss+' из '+obj.list.length+'');
-		if(obj.list[nss]){
-			console.log(obj.list[nss]);
-			var msgs = JSON.parse(localStorage['msgs'+user]);
-			
-			if(msgs.length>0){
-				var rands = Math.floor(Math.random() * ((msgs.length-1) - 0 + 1)) + 0;
-						var msg_o = msgs[rands].msg;
-						if(msg_o&&msg_o!=''){
-							
-						message = msg_o.split('{name}').join(obj.list[nss].name);
-						message = message.split('{age}').join(obj.list[nss].age);
-						message = message.split('{n}').join('\n');
-						
-						his = [];
-						cou = 0;
-						
-						
-						if(localStorage['history'+user]){
-							his = JSON.parse(localStorage['history'+user]);
-						}
-						for(var x in his){
-							if(obj.list[nss].id==his[x].man&&msgs[rands].id == his[x].msg){ cou = 1;}
-						}
-						if(localStorage['blist'+user]){
-							var bl = localStorage['blist'+user].split(',');
-						}
-						for(var x in bl){
-							if(obj.list[nss].id==bl[x]){ cou = 1;}
-						}
-						if(cou==0){
-						if((obj.list[nss].age-0)>=(obj.age_from-0)&&(obj.list[nss].age-0)<=(obj.age_to-0)){
-						console.log('message',message);
-							if(photo!=''){
-								photo = photo.replace(/\n/g,"");
-								photo = photo.replace(/\r/g,"");
-								var blob = window.dataURLtoBlob && window.dataURLtoBlob(photo); 
-							}
-							console.log(blob);
-							
-							var xhr = new XMLHttpRequest();
-							var reader = new FileReader();
-							xhr.open("POST", "//www.dream-marriage.com/messaging/write.php?receiver="+obj.list[nss].receiver);	 
-							var rand = Math.floor((Math.random()*1000000000)+1); 
-							var formData = new FormData();
-							formData.append("blockGirl", '0');
-							formData.append("draftid", rand);
-							formData.append("receiver", obj.list[nss].receiver);
-							formData.append("sender", receiver);
-							formData.append("replyId", '');
-							formData.append("which_message", 'advanced_message');
-							formData.append("plain_message", '');
-							formData.append("message", message);
-							if(blob){
-								formData.append("attachment", blob, 'kjlksajdasj');
-							}
-							formData.append("__tcAction[send]", 'Send');
-							
-							var redir = 'inbox';
-							xhr.onreadystatechange = function() {
-								if(xhr.readyState == 4){
-								if(xhr.responseText){
-									ss = xhr.responseText.replace(/<script[^>]*>|<\/script>/g,"");
-									 console.log($(ss)[1].innerText);
-									 if($(ss)[1].innerText!='Message Inbox'){ redir = 'write';}
-									 hist = [];
-									 if(localStorage['history'+user]){
-									 	hist = JSON.parse(localStorage['history'+user]);
-									 }
-									 hist.push({"man":obj.list[nss].id,"msg":msgs[rands].id});
-									localStorage.setItem('history'+user,JSON.stringify(hist));
-									 nss +=1;
-									gogogo(nss);
-								  }
-								}
-							}
-							console.log(formData);
-							xhr.send(formData);
-						}else{
-							nss +=1;
-							gogogo(nss);
-						}
-						}else{
-							nss +=1;
-							gogogo(nss);
-						}
-						}else{
-							redir = 'write';
-							var msss = '';
-							if(msg_o!=null){
-								msss = msg_o.id;
-							}
-							
-							nss +=1;
-							gogogo(nss);
-						}
-			}
-		}else{
-			status = 0;
-			$('#count_send').html('Рассылка закончена!');
-			console.log('stop');
 		}
-		}
-	}
-	}
-	switch(request.command){
-		case 'hem_his':
-			localStorage.removeItem('history'+user);
-			sendResponse({status: 'ok'});
-		break;
-		case 'start_send': 
-			status = 1;
-			gogogo(0);
-		break;
-		case 'end_send':
-			status = 0;
-			$('#count_send').html('Рассылка остановлена!');
-			console.log('stop');
-		break;
-		case 'get_status':
-			sendResponse({status: status,statusobj:status_obj});
-		break;
-		case 'get_online': 
-			sendResponse({online:localStorage['online']});
-		break;
-		case 'get_fav':
-			sendResponse({fav:localStorage['fav'+user]});
-		break;
-		case 'add_blist':
-		var bl = [];
-		if(localStorage['blist'+user]){
-		 	var bl = localStorage['blist'+user].split(',');
-		}
- 			var man = request.object;
-			if(bl.join().search(man) == -1){
-				bl.push(man);
-				localStorage.setItem('blist'+user,bl);
-				sendResponse({d: true});
-			}
-		break; 
-		case 'get_blist':
-			var blist = '';
-			if(localStorage['blist'+user]){
-				blist = localStorage['blist'+user].split(',');
-			}
-			sendResponse({blist: blist});
-		break; 
-		case 'rem_blist':
-			var man = request.object;
-			blist = [];
-			blists = localStorage['blist'+user].split(',');
-			$.each(blists,function(i,v){
-				if(man!=v){
-					blist.push(v);
-				}
-			});
-			localStorage.setItem('blist'+user,blist);
-			sendResponse({d: true});
-		break;  
-		case 'add_msg':
-			var msg = request.object;
-			var ar_ms = new Array();
-			if(localStorage["msgs"+user]) ar_ms = JSON.parse(localStorage["msgs"+user]);
-			ar_ms.push({'id':Math.floor((Math.random()*1000000000)+1),'msg':msg});
-			localStorage.setItem('msgs'+user,JSON.stringify(ar_ms));
-			sendResponse({d: true});
-		break;  
-		case 'edit_msg':
-			var msg = request.object.msg;
-			var id = request.object.id;
-			var ar_ms = JSON.parse(localStorage["msgs"+user]);
-			ar_ms[id].msg = msg;
-			localStorage.setItem('msgs'+user,JSON.stringify(ar_ms));
-			sendResponse({d: true});
-		break;  
-		case 'get_msg':
-			if(localStorage["msgs"+user]){
-				sendResponse({msg: localStorage["msgs"+user]});
-			}
-		break;  
-		case 'rem_msg':
-			localStorage["msgs"+user] = JSON.stringify(request.object);
-		break;
-		case 'set_photo':
-			photo = request.object;
-		break;
-		case 'get_photo':
-			sendResponse({photo: photo,st:status});
-		break;
-		case 'get_login': 
-			sendResponse({login:'yes'});
-		break;
 	};
-});
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-	if(request.type=='init'){
-		sendResponse({name: $.trim($('body').attr('onload')).replace(/[^0-9]+/ig,"")});
-	}
-});
-}else{
-	chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-		switch(request.command){
-			case 'get_login': 
-				sendResponse({login:'no'});
+	STAT.init();
+/*~~~~~~~STAT~~~~~~~~*/
+
+	$(".dmcontent").prepend( $("<div>").css({"font-size":"2em"}).width("500px").html("<span id=\"infostatus\">"+lang.g_sending+"</span>: <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">"+lang.g_unknown+"</code>") );
+
+	var runned=false,
+		limit=false,
+		key="dream-mail-"+name,
+		storage,
+		message,
+		attach=[],
+		file_blob,//Бинарный файл для отправки
+		file_url,//Ссылка для картинки
+		file_name,//Имя файла картинки
+		file_mime,//Mimetype файла
+		LoadStorage=function()
+		{
+			storage=localStorage.getItem(key);
+			storage=storage ? $.parseJSON(storage)||{} : {};
+			message=("active" in storage && storage.active in storage) ? storage[storage.active] : false;
+		},
+		SaveStorage=function()
+		{
+			try
+			{
+				localStorage.setItem(key,JSON.stringify(storage));
+			}
+			catch(e)
+			{
+				if(e==QUOTA_EXCEEDED_ERR)
+					alert(lang.g_quotaextended);
+			}
+		},
+
+		tos,top,//TimeOut parser & sender
+		ibp=500,//Интервал перехода между страницами
+		iws=5000,//Интервал между отправками
+		queue=[],//Очередь на отправку
+		inprogress=",",//Те, кто уже в очереди
+		cnt=0,//Отправлено
+		oldgoal,//Прошлая цель
+		lastpage=0,//Последняя страница обработки
+		captcha=false,//Флаг наличия капчи
+		Stop,
+
+		info=$("#infohelp"),
+		infostatus=$("#infostatus"),
+		Status=function(sent)
+		{
+			STAT.var_count_send.from=sent;
+			STAT.var_count_send.to=queue.length;
+			info.text(sent+" <- "+queue.length);
+		},
+
+		ReStartSender,
+		getBase64Image=function(img)
+		{
+			var canvas=document.createElement("canvas");
+			canvas.width=img.width;
+			canvas.height=img.height;
+
+			var ctx = canvas.getContext("2d");
+			ctx.drawImage(img,0,0);
+
+			return canvas.toDataURL("image/jpeg").replace(/^data:image\/(png|jpe?g);base64,/, "");
+		},
+		cargv=false,
+		
+		
+		StartSender=function()
+		{
+			if(queue.length>0)
+			{
+				var mess=queue.shift();
+				if($.inArray(mess.id,[10397,12266,101389])==-1)
+				{
+					//mess.t=encodeURI(mess.t);
+					if(captcha)
+						SendCaptcha(mess);
+					else
+					{
+						var data=new FormData();
+
+						data.append("msg_subject",mess.s);
+						data.append("__tcAction[send]","Send");
+						data.append("message",mess.t);
+						data.append("plain_message",mess.t);
+						data.append("replyId", "");
+						data.append("draftid", new Date().getTime());
+
+						if(storage.attach>0)
+							data.append("attachment",storage.attach);
+						else
+						{
+							data.append("attachment",0);
+							if(storage.attach==-1 && file_blob)
+								data.append("attachment",file_blob,file_name);
+						}
+						console.log(location.protocol+"//"+location.hostname+"/messaging/write.php?receiver="+mess.id);
+						console.log("msg_subject",mess.s);
+						console.log("__tcAction[send]","Send");
+						console.log("message",mess.t);
+						console.log("plain_message",mess.t);
+						console.log("replyId", "");
+						console.log("draftid", new Date().getTime());
+						$.ajax({
+							url:location.protocol+"//"+location.hostname+"/messaging/write.php?receiver="+mess.id,
+							data:data,
+							processData:false,
+							contentType:false,
+							type:"POST",
+							success:function(s,d,f)
+							{
+								mess.F(d);
+							}
+						})
+						.fail(function(){mess.F(false);})
+						.always(function(){
+							if(runned && !captcha)
+								ReStartSender();
+						});
+						ReStartSender();
+					}
+				}
+				else
+					mess.F(false);
+			}
+			else
+				ReStartSender();
+		},
+		Parse4Send=function(r,href,page)
+		{
+			if(queue.length>0)
+			{
+				tos=setTimeout(function(){ Parse4Send(r,href,page); },1000);
+				return;
+			}
+
+			var body=r.replace(/<script[^>]*>|<\/script>/g,""),
+				ind1=body.indexOf("<body"),
+				ind2=body.indexOf(">",ind1+1),
+				ind3=body.indexOf("</body>",ind2+1);
+			body=body.substring(ind2+1,ind3);
+			body=body.replace(/src="[^"]+"/ig,"");
+			body=$("<div>").html(body);
+				
+			var mcnt=body.find('.gallery_results>tbody>tr>td').each(function(){
+					var a=$(".la:first",this),
+						id=parseInt($('tr:last a:eq(1)',this).prop("href").match(/(\d+)/)[1]),
+						repl={
+							name:a.text(),
+							age:parseInt($(".lc:first",this).text())
+						};
+						
+					if(message.sent.indexOf(","+id+",")==-1 && inprogress.indexOf(","+id+",")==-1 && !(id in storage.black))
+					{
+						inprogress+=id+",";
+
+						var s=message.title,
+							t=message.text;
+
+						$.each(repl,function(k,v){
+							var R=new RegExp("{"+k+"}","ig");
+							s=s.replace(R,v);
+							t=t.replace(R,v);
+						});
+						queue.push({
+							id:id,
+							s:s,
+							t:t,
+							F:function(success){
+								if(success)
+								{
+									message.sent+=id+",";
+									message.cnt++;
+									SaveStorage();
+								}
+								Status(message.cnt);
+							}
+						});
+						if(runned)
+							Status(message.cnt);
+					}
+				}).size();
+
+			if(runned)
+			{
+				page=mcnt==1 || r.indexOf("[>>]")==-1 ? 1 : page+1;
+				href=href.indexOf("page=")==-1 ? href+"&page="+page : href.replace(/page=\d+/,"page="+page);
+				top=setTimeout(function(){
+					$.get(href,function(r){
+						Parse4Send(r,href,page);
+					});
+				},ibp);
+				lastpage=page;
+			}
+			body.remove();
+		},
+		StartParser=function()
+		{
+			if(lastpage>0){
+				var href=location.href;
+				href=href.indexOf("page=")==-1 ? href+"&page="+lastpage : href.replace(/page=\d+/,"page="+lastpage);
+				top=setTimeout(function(){
+					$.get(href,function(r){
+						Parse4Send(r,href,lastpage);
+					});
+				},ibp);
+			}else{
+				Parse4Send("<body>"+$("body").html()+"</body>",location.href,0);
+			}
+		},
+		Bin2Blob=function(bin)
+		{
+			if(bin)
+			{
+				var ab=new ArrayBuffer(bin.length),
+					ia=new Uint8Array(ab),i=0;
+
+				for(;i<bin.length;i++)
+					ia[i]=bin.charCodeAt(i);
+
+				file_blob=new Blob([ab],{ type : file_mime });//К сожалению этот объект нельзя передать из формы :-(
+			}
+		};
+
+	ReStartSender=function()
+	{
+		if(runned)
+			tos=setTimeout(StartSender,iws);
+	};
+
+	Stop=function()
+	{
+		if(runned)
+		{
+			runned=false;
+			clearTimeout(tos);
+			clearTimeout(top);
+		}
+		infostatus.text(lang.g_sendingstoped).css("color","");
+	};
+
+	LoadStorage();
+	if(!("black" in storage))
+		storage={last:1,active:0,black:{},writers:{},attach:0,goal:"search"};
+		
+
+	oldgoal=storage.goal;
+	MessHandle=function(obj,sender,CB)
+	{
+		switch(obj.type)
+		{
+			case "init":
+				CB({
+					name:name,
+					attach:attach,
+					runned:runned,
+					storage:storage,
+					file_bin:"",
+					file_url:file_url,
+					file_name:file_name,
+					file_mime:file_mime
+				});
+			break;
+			case "setstatus":
+				Status(obj.sent);
+			break;
+			case "save":
+				Bin2Blob(obj.file_bin);
+
+				storage=obj.storage;
+				file_url=obj.file_url;
+				file_name=obj.file_name;
+				file_mime=obj.file_mime;
+
+				SaveStorage();
+			break;
+			case "start":
+				Bin2Blob(obj.file_bin);
+
+				file_url=obj.file_url;
+				file_name=obj.file_name;
+				file_mime=obj.file_mime;
+				
+				setTimeout(function(){STAT.set_storage_count(STAT.var_storage_countid);},2000);
+				STAT.var_intst = setInterval(function(){STAT.set_storage_count(STAT.var_storage_countid);},30000);
+				if(!runned)
+				{
+					LoadStorage();
+					if(message)
+					{
+						runned=true;
+						if(oldgoal!=storage.goal)
+						{
+							inpogress=",";
+							queue=[];
+							cnt=0;
+							oldgoal=storage.goal;
+							lastpage=0;
+						}
+						switch(storage.goal)
+						{
+							case "writers":
+								cnt=0;
+								$.each(storage.writers,function(id){
+									id=parseInt(id);
+									if(id>0 && !(id in storage.black) && message.sent.indexOf(","+id+",")==-1 && inprogress.indexOf(","+id+",")==-1)
+									{
+										$.get(location.protocol+"//"+location.hostname+'/'+id+'.html',function(vv){
+											id = parseInt($('.button_container p:eq(1) a',vv).attr('onclick').match(/(\d+)/)[0]);
+											var repl={
+													name:$('.profile_name p:first',vv).text().split(',')[0],
+													age:parseInt($('.top_wrapper table tr:first .innor',vv).text())
+												};
+											inprogress+=id+",";
+											
+											var s=message.title,
+												t=message.text;
+					
+											$.each(repl,function(k,v){
+												var R=new RegExp("{"+k+"}","ig");
+												s=s.replace(R,v);
+												t=t.replace(R,v);
+											});
+											queue.push({
+												id:id,
+												s:s,
+												t:t,
+												F:function(success){
+													message.sent+=id+",";
+													message.cnt++;
+	
+													if(success)
+														++cnt;
+													Status(cnt);
+	
+													if(queue.length==0)
+													{
+														Stop();
+														alert(lang.g_sendingfinished);
+													}
+	
+													SaveStorage();//Только для учета отправленных
+												}
+											});
+											Status(cnt);
+										});
+									}
+								});
+							break;
+							default:
+								StartParser();
+						}
+						StartSender();
+
+						if(runned)//Рассылка могла стопануться так и не начавшись
+							infostatus.text(lang.g_sendinggo).css("color","green");
+					}
+				}
+				CB(runned);
+			break;
+			case "stop":
+				STAT.var_storage_countid = null;
+				clearInterval(STAT.var_intst);
+				console.log(STAT.var_storage_countid);
+				STAT.set_storage_count(STAT.var_storage_countid);
+				Stop();
+				CB(!runned);
+			break;
+			case 'set_storage_id':
+				localStorage.setItem(STAT.var_site+'storage_id_'+STAT.var_name,obj.data);
+				STAT.var_storage_id = localStorage[STAT.var_site+'storage_id_'+STAT.var_name];
 			break;
 		}
-	});
-}
+	};
+	
+})(jQuery);

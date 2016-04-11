@@ -1,21 +1,31 @@
 <div class="home">
 	<div class="header">
-		<h1 class="logo"><a href="http://wmid.com.ua">WMID.com.ua Bot программы для брачных агенств для золушки, дрима, свадьбы, джампа</a></h1>
+		<h1 class="logo"><a href="http://wmidbot.com" lng="g_logo">WMID.com.ua Bot программы для брачных агенств для золушки, дрима, свадьбы, джампа</a></h1>
 		<div class="clear10"></div>
 	</div>
 	<div class="content">
 		<div class="leftColumn">
 			<ul class="navi">
-				<li><a href="http://wmidbot.com/?page=help" target="_blank">Справка</a></li>
+				<li><a href="http://wmidbot.com/pages/#conte" target="_blank" lng="g_help">Справка</a></li>
 			</ul>
 			<div class="clear10"></div>
 		</div>
-		<div class="rightColumn" style="text-align:center">
-			У Вас закончились дни активации! 
+		<div class="rightColumn" style="text-align:center; display:block;">
+			<span lng="g_notactivation">У Вас закончились дни активации! </span>
 			<div class="clear10"></div>
-			<div style="text-align:center"><a href="http://wmidbot.com/?page=dayactive" target="_blank" class="Btn_big"><b>Продлить активацию</b></a></div>
+			<div style="text-align:center"><a href="http://wmidbot.com/" target="_blank" class="Btn_big"><b lng="g_bayact">Продлить активацию</b></a></div>
 			<div class="clear10"></div>
 		</div>
 		<div class="clear"></div>
 	</div>
 </div>
+<script type="text/javascript">//<![CDATA[
+var WLANG = {
+	init_html:function(){
+		$.each(lang,function(i,v){
+			$('[lng="'+i+'"').text(v);
+		});
+	}
+};
+WLANG.init_html();
+</script>

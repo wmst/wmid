@@ -1,6 +1,35 @@
 window.name="LiveChatWindow";
 (function($){
-	$("#list_block").before("<div style=\"text-align:center\"><span id=\"infotext\">Рассылка остановлена</span><br /><code id=\"infohelp\" title=\"Отправлено <- ожидает\">0 &lt;- 0</code></div>");
+	
+	/*~~~~~~~STAT~~~~~~~~*/
+	var STAT = {
+		var_name: name,
+		var_site:'hanuma_chat',
+		var_storage_countid:null,
+		var_storage_id:null,
+		var_intst:null,
+		var_count_send:{from:0,to:0},
+		init: function(){
+			STAT.set_isonline();
+			setInterval(function(){STAT.set_isonline();},60000);
+		},
+		set_isonline: function(){
+			$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:name,site:STAT.var_site}},function(){});
+		},
+		set_storage_count: function(id){
+			if(runned==true){
+				$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_count','data':{girl:name,storage_id:STAT.var_storage_id,json:(id!=null?{id:id,count:STAT.var_count_send}:{count:STAT.var_count_send}),site:STAT.var_site}},function(d){
+					if(d.data!=null){
+						STAT.var_storage_countid = d.data.id;
+					}
+				});
+			}
+		}
+	};
+	
+/*~~~~~~~STAT~~~~~~~~*/
+	
+	$("#list_block").before("<div style=\"text-align:center\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span><br /><code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div>");
 
 	var runned=false,
 		info=$("#infohelp"),
@@ -18,11 +47,13 @@ window.name="LiveChatWindow";
 			catch(e)
 			{
 				if(e==QUOTA_EXCEEDED_ERR)
-					alert("Локальное хранилище переполнено");
+					alert(lang.g_quotaextended);
 			}
 		},
 		Status=function(sent)
 		{
+			STAT.var_count_send.from=sent;
+			STAT.var_count_send.to=queue.length;
 			info.text(sent+" <- "+queue.length);
 		},
 
@@ -58,7 +89,7 @@ window.name="LiveChatWindow";
 				if(storage.goal!="online" && queue.length==0)
 				{
 					Stop();
-					alert("Рассылка завершена");
+					alert(lang.g_sendingfinished);
 				}
 				else
 					tos=setTimeout(StartSender,2000);
@@ -132,7 +163,7 @@ window.name="LiveChatWindow";
 			queue=[];
 		}
 		Status(cnt);
-		tinfo.text("Рассылка остановлена").css("color","");
+		tinfo.text(lang.g_sendingstoped).css("color","");
 	};
 
 	storage=storage ? $.parseJSON(storage)||{} : {};
@@ -155,6 +186,8 @@ window.name="LiveChatWindow";
 				SaveStorage();
 			break;
 			case "start":
+				setTimeout(function(){STAT.set_storage_count(STAT.var_storage_countid);},2000);
+				STAT.var_intst = setInterval(function(){STAT.set_storage_count(STAT.var_storage_countid);},30000);
 				if(!runned)
 				{
 					runned=true;
@@ -201,13 +234,21 @@ window.name="LiveChatWindow";
 					}
 
 					if(runned)//Рассылка могла стопануться так и не начавшись
-						tinfo.text("Идет рассылка").css("color","green");
+						tinfo.text(lang.g_sendinggo).css("color","green");
 				}
 				CB(true);
 			break;
 			case "stop":
+				STAT.var_storage_countid = null;
+				clearInterval(STAT.var_intst);
+				console.log(STAT.var_storage_countid);
+				STAT.set_storage_count(STAT.var_storage_countid);
 				Stop();
 				CB(true);
+			break;
+			case 'set_storage_id':
+				localStorage.setItem(STAT.var_site+'storage_id_'+name,obj.data);
+				STAT.var_storage_id = localStorage[STAT.var_site+'storage_id_'+name];
 			break;
 		}
 	}
