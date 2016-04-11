@@ -209,7 +209,7 @@ var STAT = {
 		}
 	}
 };
-STAT.init();
+if(server){ STAT.init();}
 var SWMID = {
 	obj_sort_list: {
 		online:null,

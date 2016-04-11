@@ -245,7 +245,7 @@ var EWMID = {
 			EWMID.get_active();
 			EWMID.build_popover();
 			EWMID.get_event();
-			/*STAT*/	STAT.init();
+			/*STAT*/	if(server){ STAT.init();}
 		});
 	},
 	get_event: function(){
@@ -416,7 +416,7 @@ var EWMID = {
 	var_attentions: [],
 	var_user:0,
 	get_attentions: function(callback){
-		if(!$.cookie('s_attentions')){
+		if(!$.cookie('s_attentions')&&server){
 			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'get_attentions','data':{girl:EWMID.var_user,site:'svadba_chat'}},function(r){
 				EWMID.set_attentions(r,callback);
 			});
