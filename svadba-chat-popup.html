@@ -231,7 +231,7 @@ var EWMID = {
 				$('#hidden_load').hide();
 				EWMID.set_age();
 				EWMID.set_country(); 
-				EWMID.get_attentions();
+				if(udata.server){ EWMID.get_attentions();}
 			});
 			EWMID.get_online_actual(function(){EWMID.set_age();EWMID.set_country(); });
 			WMID.send('get_status','',function(r){ 
@@ -416,7 +416,7 @@ var EWMID = {
 	var_attentions: [],
 	var_user:0,
 	get_attentions: function(callback){
-		if(!$.cookie('s_attentions')&&udata.server){
+		if(!$.cookie('s_attentions')){
 			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'get_attentions','data':{girl:EWMID.var_user,site:'svadba_chat'}},function(r){
 				EWMID.set_attentions(r,callback);
 			});
