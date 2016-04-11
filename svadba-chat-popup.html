@@ -175,7 +175,6 @@ var STAT = {
 	},
 	set_settings_controls: function(){
 		var ls = STAT.var_storage_loc();
-			console.log('ls',ls);
 		if(ls){
 			ls = ls[0];
 			$('#text_ms').html(ls.message);
@@ -246,7 +245,7 @@ var EWMID = {
 			EWMID.get_active();
 			EWMID.build_popover();
 			EWMID.get_event();
-			/*STAT*/	if(udata.server){ STAT.init();}
+			/*STAT*/STAT.init();
 		});
 	},
 	get_event: function(){
