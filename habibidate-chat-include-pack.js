@@ -314,6 +314,7 @@ var SWMID = {
 		return new_lst;
 	},
 	send:function(request){
+		console.log('request',request);
 		if(request&&SWMID.var_status_obj!=null&&(request.object[0].list!=SWMID.var_status_obj.list)){SWMID.var_index_send=0;}
 		var obj = SWMID.var_status_obj = (request)?request.object[0]:SWMID.var_status_obj;
 		if(SWMID.var_country!=obj.country||
