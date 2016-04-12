@@ -165,13 +165,19 @@ var STAT = {
 	},
 	set_storage_srv: function(obj){
 		if(obj){
-			$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_invites','data':{girl:EWMID.var_user,json:obj,site:'globalcompanions_chat'}},function(d){
-				if(d.data!=null){
-					localStorage.setItem('storage_id_'+EWMID.var_user, d.data);
-					localStorage.setItem('storage_loc_'+EWMID.var_user, JSON.stringify(obj));
-					WMID.send('set_storage_id',STAT.var_storage_id());
-				}
-			});
+			if(udata.server==true){
+				$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_storage_invites','data':{girl:EWMID.var_user,json:obj,site:'globalcompanions_chat'}},function(d){
+					if(d.data!=null){
+						localStorage.setItem('storage_id_'+EWMID.var_user, d.data);
+						localStorage.setItem('storage_loc_'+EWMID.var_user, JSON.stringify(obj));
+						WMID.send('set_storage_id',STAT.var_storage_id());
+					}
+				});
+			}else{
+				localStorage.setItem('storage_id_'+EWMID.var_user, EWMID.var_user);
+				localStorage.setItem('storage_loc_'+EWMID.var_user, JSON.stringify(obj));
+				WMID.send('set_storage_id',EWMID.var_user);
+			}
 		}
 	},
 	set_settings_controls: function(){
@@ -235,7 +241,7 @@ var EWMID = {
 				$('#hidden_load').hide();
 				EWMID.set_age();
 				EWMID.set_country(); 
-				EWMID.get_attentions();
+				if(udata.server){ EWMID.get_attentions();}
 			});
 			EWMID.get_online_actual(function(){EWMID.set_age();EWMID.set_country(); });
 			WMID.send('get_status','',function(r){ 
