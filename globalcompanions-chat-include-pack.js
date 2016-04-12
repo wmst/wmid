@@ -386,7 +386,7 @@ var SWMID = {
 				limit_send = SWMID.obj_sort_list.attentions.length;
 			break;
 		}
-		if(limit_send>-1){
+		if(limit_send>-1&&send_member){
 			console.log(send_member);
 			if(SWMID.var_age_from<=SWMID.var_age_to){
 				send_member.name = send_member.name.charAt(0).toUpperCase() + send_member.name.substr(1).toLowerCase();
