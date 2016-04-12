@@ -208,7 +208,7 @@ var STAT = {
 		}
 	}
 };
-STAT.init();
+if(udata.server){ STAT.init();}
 var SWMID = {
 	obj_sort_list: {
 		online:null,
@@ -572,14 +572,21 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 		case 'get_pisal':
 			var loc_pisal = localStorage['pisal_list'+$.cookie('user_id')];
 			var c = sendResponse;
-			STAT.sink_storage_list(loc_pisal,'pisal',function(req){
-				if(req){
-					var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
-					SWMID.arr_pisal = obj_array;
-					localStorage.setItem('pisal_list'+$.cookie('user_id'),JSON.stringify(obj_array));
+			if(udata.server){
+				STAT.sink_storage_list(loc_pisal,'pisal',function(req){
+					if(req){
+						var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
+						SWMID.arr_pisal = obj_array;
+						localStorage.setItem('pisal_list'+$.cookie('user_id'),JSON.stringify(obj_array));
+					}
+					c({pisal: req.data});
+				});
+			}else{
+				if(loc_pisal){
+					SWMID.arr_pisal = JSON.parse(loc_pisal);
+					c({pisal: SWMID.arr_pisal});
 				}
-				c({pisal: req.data});
-			});
+			}
 			return true;
 		break;
 		case 'rem_pisal':
@@ -655,14 +662,21 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 		case 'get_blist':
 			var loc_blist = localStorage['blist'+$.cookie('user_id')];
 			var c = sendResponse;
-			STAT.sink_storage_list(loc_blist,'blist',function(req){
-				if(req){
-					var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
-					SWMID.arr_bleck = obj_array;
-					localStorage.setItem('blist'+$.cookie('user_id'),JSON.stringify(obj_array));
-					c({blist: req.data});
+			if(udata.server){
+				STAT.sink_storage_list(loc_blist,'blist',function(req){
+					if(req){
+						var obj_array = (req.data?Object.keys(req.data).map(function (key) {return req.data[key]}):[]);
+						SWMID.arr_bleck = obj_array;
+						localStorage.setItem('blist'+$.cookie('user_id'),JSON.stringify(obj_array));
+						c({blist: req.data});
+					}
+				});
+			}else{
+				if(loc_blist){
+					SWMID.arr_bleck = JSON.parse(loc_blist);
+					c({blist: SWMID.arr_bleck});
 				}
-			});
+			}
 			return true;
 			
 		break; 
