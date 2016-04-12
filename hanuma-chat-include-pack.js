@@ -30,7 +30,16 @@ window.name="LiveChatWindow";
 /*~~~~~~~STAT~~~~~~~~*/
 	
 	$("#list_block").before("<div style=\"text-align:center\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span><br /><code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div>");
-
+	function translb(sel){
+		$(sel).after('<a href="javascript:void(0)" id="wmid_trans" style="width:112px; height: 27px; background: #26ade4; text-indent: 0; line-height: 28px; margin-left: 10px; font-weight: bold; color: #fff; text-decoration: none;font-size: 14px;text-align: center;padding: 0 5px;">WMID Translate</a><style>#Chat_ClientPanel_ShowMeSelect_TD { width:260px;}</style>');
+		$('#wmid_trans').click(function(){
+			$.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20140925T082047Z.5055d7e52197b592.bda3ad29dbb6a6aa6d19098d6e9748aca550221e&text='+$('#chatmsg').val()+'&lang=en',function(s){
+				console.log(s.text);
+				if(s.code==200) $('#chatmsg').val(s.text[0]);
+			});
+		});
+	}
+	translb('#inviteimgblock');
 	var runned=false,
 		info=$("#infohelp"),
 		tinfo=$("#infotext"),
