@@ -391,6 +391,7 @@ var EWMID = {
 				var and_or_vp = $('#and_or option:selected').index();
 				oblect_send.push({message:m,age_from:age_from,age_to:age_to,country:country,list:typeSend,fake: $('#fake:checked').length,vip:$('#vip:checked').length,and_or_vp:and_or_vp,speed:speed});
 /*STAT*/		STAT.set_storage_srv(oblect_send);
+console.log('oblect_send',oblect_send);
 				WMID.send('start_send',oblect_send);
 			}else{
 				alert(lang.g_error_link);

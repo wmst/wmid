@@ -350,6 +350,8 @@ var SWMID = {
 				SWMID.obj_sort_list.online = (SWMID.obj_sort_list.online==null)?SWMID.sort_list(['age','vip_photo','bleck','pisal','contacts','country'],SWMID.arr_online):SWMID.obj_sort_list.online;
 				send_member = SWMID.obj_sort_list.online[SWMID.var_index_send];
 				limit_send = SWMID.obj_sort_list.online.length;
+				
+		console.log('send_member',send_member);
 			break;
 			case 1: 
 				SWMID.obj_sort_list.contacts = (SWMID.obj_sort_list.contacts==null)?SWMID.sort_list(['age','bleck','pisal'],SWMID.arr_contacts):SWMID.obj_sort_list.contacts;
