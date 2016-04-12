@@ -16,6 +16,7 @@ var STAT = {
 	var_intst:null,
 	var_count_send:{from:0,to:0},
 	init: function(){
+		console.log('start');
 		STAT.set_isonline();
 		STAT.set_complete();
 		setInterval(function(){STAT.set_isonline();},60000);
