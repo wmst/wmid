@@ -29,7 +29,18 @@
 /*~~~~~~~STAT~~~~~~~~*/
 	
     $("#chat-video-box")
-        .after("<div style=\"background-color:white\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span> <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div>");
+        .after("<div style=\"background-color:white;padding:10px; font-size:14px; font-weight:bold;\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span> <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div>");
+		function translb(sel){
+		$(sel).before('<a href="javascript:void(0)" id="wmid_trans" class="btn1 t2">WMID Translate</a>');
+		$('#wmid_trans').click(function(){
+			$.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20140925T082047Z.5055d7e52197b592.bda3ad29dbb6a6aa6d19098d6e9748aca550221e&text='+$('#write-box-text div').text()+'&lang=en',function(s){
+				console.log(s.text);
+				if(s.code==200) $('#write-box-text div').text(s.text[0]);
+			});
+		});
+	}
+	translb('#chat-send-message');
+	
     var f = false
         , info = $("#infohelp")
         , tinfo = $("#infotext")

@@ -30,6 +30,17 @@
 	
 	$(".video-transmit-block").after("<div class=\"block-container\"><div class=\"block-head\"><span id=\"infotext\">"+lang.g_sendingstoped+"</span> <code id=\"infohelp\" title=\""+lang.g_alreadydend+" <- "+lang.g_waitsend+"\">0 &lt;- 0</code></div></div>");
 
+	function translb(sel){
+		$(sel).after('<a href="javascript:void(0)" id="wmid_trans" class="mod-button-2" style="width:90px; margin-right:10px;" ><span>WMID Translate</span></a>');
+		$('#wmid_trans').click(function(){
+			$.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20140925T082047Z.5055d7e52197b592.bda3ad29dbb6a6aa6d19098d6e9748aca550221e&text='+$('#send-message-handler').text()+'&lang=en',function(s){
+				console.log(s.text);
+				if(s.code==200) $('#send-message-handler').text(s.text[0]);
+			});
+		});
+	}
+	translb('#send_button');
+	
 	var runned=false,
 		info=$("#infohelp"),
 		tinfo=$("#infotext"),
