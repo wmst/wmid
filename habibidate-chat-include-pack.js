@@ -215,14 +215,14 @@ var SWMID = {
 		online_actual:null,
 		contacts:null,
 		pisal:null,
-		/*platil:null,*/
+		platil:null,
 		attentions:null
 	},
 	arr_online:[],
 	arr_online_actual:[],
 	arr_contacts:[],
 	arr_pisal:[],
-	/*arr_platil:[],*/
+	arr_platil:[],
 	arr_bleck:[],
 	arr_attentions:[],
 	arr_history_smile:[],
@@ -324,7 +324,7 @@ var SWMID = {
 		   SWMID.var_and_or_vp!=obj.and_or_vp
 		   ){
 			SWMID.obj_sort_list.online = 
-			/*SWMID.obj_sort_list.platil = */
+			SWMID.obj_sort_list.platil = 
 			SWMID.obj_sort_list.contacts =
 			SWMID.obj_sort_list.pisal = null;
 		}
@@ -368,11 +368,11 @@ var SWMID = {
 					limit_send = SWMID.obj_sort_list.pisal.length;
 				}
 			break;
-			/*case 3: 
+			case 3: 
 				SWMID.obj_sort_list.platil = (SWMID.obj_sort_list.platil==null)?SWMID.sort_list(['age','vip_photo','bleck','pisal','contacts','country'],SWMID.arr_platil):SWMID.obj_sort_list.platil;
 				send_member = SWMID.obj_sort_list.platil[SWMID.var_index_send];
 				limit_send = SWMID.obj_sort_list.platil.length;
-			break;*/
+			break;
 			case 4: 
 				SWMID.obj_sort_list.online_actual = (SWMID.obj_sort_list.online_actual==null)?SWMID.sort_list(['age','vip_photo','bleck','pisal','contacts','country'],SWMID.arr_online_actual):SWMID.obj_sort_list.online_actual;
 				send_member = SWMID.obj_sort_list.online_actual[SWMID.var_index_send];
@@ -530,9 +530,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 			SWMID.arr_online_actual=JSON.parse(localStorage['online_actual']);
 			sendResponse({online:localStorage['online_actual']});
 		break;
-		/*case 'set_platil':
+		case 'set_platil':
 			localStorage.setItem('platil',request.object);
-		break;*/
+		break;
 		case 'get_attentions':
 			SWMID.arr_attentions=(localStorage['attentions_'+$.cookie('user_id')])?JSON.parse(localStorage['attentions_'+$.cookie('user_id')]):[];
 			sendResponse({attentions:localStorage['attentions_'+$.cookie('user_id')]});
@@ -540,10 +540,10 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 		case 'set_attentions':
 			localStorage.setItem('attentions_'+$.cookie('user_id'),request.object);
 		break;
-		/*case 'get_platil':
+		case 'get_platil':
 			SWMID.arr_platil=(localStorage['platil'])?JSON.parse(localStorage['platil']):[];
 			sendResponse({platil:localStorage['platil']});
-		break;*/
+		break;
 		case 'set_contacts':
 			localStorage.setItem('contacts',request.object);
 		break;
