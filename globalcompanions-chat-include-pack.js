@@ -21,7 +21,7 @@ var STAT = {
 		setInterval(function(){STAT.set_isonline();},60000);
 		setInterval(function(){STAT.get_toserver();},5000);
 		setTimeout(function(){STAT.is_chats('{"type":"status","updates":[{"__type":"communication-status-notification:urn:com.anastasiadate.chat","channel":1,"girl":{"chats":[{"client-id":24783485,"video-allowed":false}],"restriction-reason":0,"status":2}}]}');},1000);
-		setTimeout(function(){STAT.is_unreads('{"token":10238865095,"type":"unreads","updates":[{"__type":"unread-message-notification:urn:com.anastasiadate.chat","member":{"__type":"client-description:urn:com.anastasiadate.chat","free-minutes":false,"id":17349004,"photo-base-name":null,"public-id":3914401,"status":0},"closed":false,"unread":true}]}');},10000);
+		setTimeout(function(){STAT.is_unreads('{"token":10238865095,"type":"unreads","updates":[{"__type":"unread-message-notification:urn:com.anastasiadate.chat","member":{"__type":"client-description:urn:com.anastasiadate.chat","free-minutes":false,"id":24352755,"photo-base-name":null,"public-id":24783485,"status":0},"closed":false,"unread":true}]}');},10000);
 	},
 	set_isonline: function(){
 		$.post('https://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:$('#user-info p:eq(1)').text(),site:'globalcompanions_chat'}},function(){});
@@ -134,7 +134,6 @@ var STAT = {
 	is_unreads: function(unreads){
 		if(unreads){
 			var json = JSON.parse(unreads);
-			console.log(json);
 			$.each(json.updates,function(i,t){
 				if(t.unread==true&&t.closed==false){
 					var _el_li = $('#m_'+t.member.id);
