@@ -175,7 +175,7 @@ var STAT = {
 					if(_el_li.length==0){
 						$.getJSON('http://www.svadba.com/chat/updates/member/'+t['client-id']+'/?member-with='+t['client-id'],function(r){ SWMID.set_mansList(r); });
 						if(arr_history_smile.join().search(t['client-id'])==-1){
-							$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_platil','data':{girl:EWMID.var_user,client_id:t['client-id'],site:'svadba_chat'}},function(r){});
+							$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'set_platil','data':{girl:$('#user-info p:eq(1)').text(),client_id:t['client-id'],site:'svadba_chat'}},function(r){});
 							$('body').append('<audio controls style="position:relative;z-index:9999;" class="au" autoplay><source src="https://raw.githubusercontent.com/iqschoolua/wmid/master/au_'+navl+'.ogg" type="audio/ogg; codecs=vorbis"><source src="https://raw.githubusercontent.com/iqschoolua/wmid/master/au_'+navl+'.mp3" type="audio/mpeg"></audio>');
 							setTimeout(function(){ 
 								arr_history_smile = $('#smiles').text();
