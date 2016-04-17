@@ -134,7 +134,7 @@ var STAT = {
 	is_unreads: function(unreads){
 		if(unreads){
 			var json = JSON.parse(unreads);
-			$.each(json,function(i,json){
+			console.log(json);
 			$.each(json.updates,function(i,t){
 				if(t.unread==true&&t.closed==false){
 					var _el_li = $('#m_'+t.member.id);
@@ -150,18 +150,15 @@ var STAT = {
 					_el_li = null;
 				}
 			});
-			});
 		}
 	},
 	is_chats: function(status){
 		if(status){
 		var json = JSON.parse(status); 
-		$.each(json,function(i,json){
 			SWMID.arr_active_chats = [];
 			var new_list_smile = [];
-			if(i=='updates'){
-			if(json[0].girl.chats.length>0){
-				$.each(json[0].girl.chats,function(i,t){
+			if(json.updates[0].girl.chats.length>0){
+				$.each(json.updates[0].girl.chats,function(i,t){
 					var _el_li = $('#m_'+t['client-id']),
 						smiles = ['*Smiling-Face*','*Heart-Shaped-Eyes*','*Kissing-Face*'],
 						msg = smiles[Math.floor(Math.random()*smiles.length)],
@@ -199,14 +196,12 @@ var STAT = {
 					$(t).remove();
 				}
 			});
-			if(json[0].girl.chats.length>3){
+			if(json.updates[0].girl.chats.length>3){
 				SWMID.var_status = 'pause';
 				SWMID.var_time_auto = null;
 				console.log('pause');
 			}
 			smiles = msg = null;
-			}
-		});
 		}else{
 			$('#chat_act ul').html('<div align="center" style="padding:10px;">'+lang.g_pusto+'</div>');	
 		}
