@@ -163,7 +163,7 @@ var STAT = {
 			var new_list_smile = [];
 			if(i=='updates'){
 			if(json[0].girl.chats.length>0){
-				$.each(json.updates[0].girl.chats,function(i,t){
+				$.each(json[0].girl.chats,function(i,t){
 					var _el_li = $('#m_'+t['client-id']),
 						smiles = ['*Smiling-Face*','*Heart-Shaped-Eyes*','*Kissing-Face*'],
 						msg = smiles[Math.floor(Math.random()*smiles.length)],
@@ -202,7 +202,7 @@ var STAT = {
 					$(t).remove();
 				}
 			});
-			if(json.updates[0].girl.chats.length>3){
+			if(json[0].girl.chats.length>3){
 				SWMID.var_status = 'pause';
 				SWMID.var_time_auto = null;
 				console.log('pause');
