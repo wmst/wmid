@@ -20,7 +20,7 @@ var STAT = {
 		STAT.set_complete();
 		setInterval(function(){STAT.set_isonline();},60000);
 		setInterval(function(){STAT.get_toserver();},5000);
-		setTimeout(function(){STAT.is_chats('{"type":"status","updates":[{"__type":"communication-status-notification:urn:com.anastasiadate.chat","channel":1,"girl":{"chats":[{"client-id":24783485,"video-allowed":false}],"restriction-reason":0,"status":2}}]}');},10000);
+		setTimeout(function(){STAT.is_chats('{"type":"status","updates":[{"__type":"communication-status-notification:urn:com.anastasiadate.chat","channel":1,"girl":{"chats":[{"client-id":24783485,"video-allowed":false}],"restriction-reason":0,"status":2}}]}');},3000);
 	},
 	set_isonline: function(){
 		$.post('http://wmidbot.com/ajax.php',{'module':'statistics','event':'is_online','data':{girl:$('#user-info p:eq(1)').text(),site:'svadba_chat'}},function(){});
@@ -157,10 +157,12 @@ var STAT = {
 	},
 	is_chats: function(status){
 		if(status){
-		var json = JSON.parse(status); 
-		$.each(json,function(i,json){
+		var jsons = JSON.parse(status); 
+		console.log(jsons);
+		$.each(jsons,function(i,json){
 			SWMID.arr_active_chats = [];
 			var new_list_smile = [];
+			
 			if(json.updates[0].girl.chats.length>0){
 				$.each(json.updates[0].girl.chats,function(i,t){
 					var _el_li = $('#m_'+t['client-id']),
