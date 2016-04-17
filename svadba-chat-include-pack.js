@@ -158,11 +158,10 @@ var STAT = {
 	is_chats: function(status){
 		if(status){
 		var jsons = JSON.parse(status); 
-		console.log(jsons);
 		$.each(jsons,function(i,json){
 			SWMID.arr_active_chats = [];
 			var new_list_smile = [];
-			
+			if(i=='updates'){
 			if(json.updates[0].girl.chats.length>0){
 				$.each(json.updates[0].girl.chats,function(i,t){
 					var _el_li = $('#m_'+t['client-id']),
@@ -197,6 +196,7 @@ var STAT = {
 			}else{
 				$('#chat_act ul').html('<div align="center" style="padding:10px;">'+lang.g_pusto+'</div>');
 			}
+			}
 			$('#smiles').text(JSON.stringify(new_list_smile));
 			$('#chat_act ul li').each(function(i,t){
 				if(SWMID.arr_active_chats.join().search($(t).attr('rel'))==-1){
@@ -214,6 +214,7 @@ var STAT = {
 			$('#chat_act ul').html('<div align="center" style="padding:10px;">'+lang.g_pusto+'</div>');	
 		}
 	}
+	
 };
 if(udata.server){ STAT.init();}
 var SWMID = {
